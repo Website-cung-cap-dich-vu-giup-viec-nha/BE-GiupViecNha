@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('LoaiDichVu', function (Blueprint $table) {
             $table->id();
-            $table->string('MaLoaiDichVu')->nullable()->unique();
             $table->string('ten')->nullable();
         });
     }

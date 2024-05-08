@@ -24,6 +24,7 @@ return new class extends Migration
             $table->time('ThoiGianBatDauCongViec')->nullable();
             $table->time('ThoiGianKetThucCongViec')->nullable();
             $table->integer('TrangThai')->nullable();
+            $table->foreignId('idDichVu')->nullable()->constrained('DichVu');
         });
     }
 

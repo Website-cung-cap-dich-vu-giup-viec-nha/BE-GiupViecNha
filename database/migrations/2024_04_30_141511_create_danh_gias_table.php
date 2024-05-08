@@ -15,9 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('SoSao')->nullable();
             $table->string('YKien')->nullable();
-            $table->foreignId('idDatDichVu')->nullable()->constrained('DatDichVu');
-            $table->foreignId('idNhanVien')->nullable()->constrained('NhanVien');
-            $table->foreignId('idKhachHang')->nullable()->constrained('KhachHang');
+            $table->foreignId('idChiTietDatDichVu')->nullable()->constrained('ChiTietDatDichVu');
         });
     }
 
