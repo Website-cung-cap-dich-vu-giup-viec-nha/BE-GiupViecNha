@@ -13,19 +13,19 @@ return new class extends Migration
     {
         Schema::create('BangLuong', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('idNhanVien')->nullable()->constrained('users');
-            $table->date('Thang');
-            $table->double('SoSao');
-            $table->double('LuongCoBan');
-            $table->double('PhuCap');
-            $table->double('SoKPICoBan');
-            $table->double('SoKPIThucTe');
-            $table->double('TongLuong');
-            $table->double('BaoHiemXaHoi');
-            $table->double('LuongThucNhan');
-            $table->double('LuongDaTra');
-            $table->double('LuongConNo');
-            $table->double('TinhTrang');
+            $table->foreignId('idNhanVien')->nullable()->constrained('NhanVien');
+            $table->date('Thang')->nullable();
+            $table->double('SoSao')->nullable();
+            $table->double('LuongCoBan')->nullable();
+            $table->double('PhuCap')->nullable();
+            $table->double('SoKPICoBan')->nullable();
+            $table->double('SoKPIThucTe')->nullable();
+            $table->double('TongLuong')->nullable();
+            $table->double('BaoHiemXaHoi')->nullable();
+            $table->double('LuongThucNhan')->nullable();
+            $table->double('LuongDaTra')->nullable();
+            $table->double('LuongConNo')->nullable();
+            $table->double('TinhTrang')->nullable();
         });
     }
 

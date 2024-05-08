@@ -13,11 +13,9 @@ return new class extends Migration
     {
         Schema::create('KPI', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('idDichVu')->nullable()->constrained('DichVu');
-            $table->dateTime('Ngay');
-            $table->foreignId('idNhanVien')->nullable()->constrained('users');
-            $table->double('SoKPI');
-            $table->foreignId('idDatDichVu')->nullable()->constrained('DatDichVu');
+            $table->foreignId('idChiTietDatDichVu')->nullable()->constrained('ChiTietDatDichVu');
+            $table->dateTime('Ngay')->nullable();
+            $table->double('SoKPI')->nullable();
         });
     }
 
