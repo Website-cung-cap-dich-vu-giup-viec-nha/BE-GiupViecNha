@@ -20,9 +20,10 @@ return new class extends Migration
             $table->time('ThoiGianKetThuc')->nullable();
             $table->string('GhiChu')->nullable();
             $table->foreignId('idDiaChi')->nullable()->constrained('DiaChi');
-            $table->foreignId('idKhachHang')->nullable()->constrained('users');
-            $table->time('ThoiGianBatDauThucHien');
-            $table->integer('TrangThai');
+            $table->foreignId('idKhachHang')->nullable()->constrained('KhachHang');
+            $table->time('ThoiGianBatDauCongViec')->nullable();
+            $table->time('ThoiGianKetThucCongViec')->nullable();
+            $table->integer('TrangThai')->nullable();
         });
     }
 
