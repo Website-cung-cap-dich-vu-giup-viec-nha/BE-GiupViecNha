@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\KPI>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\GoiDichVu>
  */
-class KPIFactory extends Factory
+class GoiDichVuFactory extends Factory
 {
     /**
      * Define the model's default state.

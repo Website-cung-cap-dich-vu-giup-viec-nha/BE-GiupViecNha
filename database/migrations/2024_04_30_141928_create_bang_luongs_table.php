@@ -18,8 +18,6 @@ return new class extends Migration
             $table->double('SoSao')->nullable();
             $table->double('LuongCoBan')->nullable();
             $table->double('PhuCap')->nullable();
-            $table->double('SoKPICoBan')->nullable();
-            $table->double('SoKPIThucTe')->nullable();
             $table->double('TongLuong')->nullable();
             $table->double('BaoHiemXaHoi')->nullable();
             $table->double('LuongThucNhan')->nullable();
