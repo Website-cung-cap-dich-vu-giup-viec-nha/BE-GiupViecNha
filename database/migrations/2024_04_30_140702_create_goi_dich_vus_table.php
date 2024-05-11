@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('KPI', function (Blueprint $table) {
+        Schema::create('GoiDichVu', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('idChiTietDatDichVu')->nullable()->constrained('ChiTietDatDichVu');
-            $table->dateTime('Ngay')->nullable();
-            $table->double('SoKPI')->nullable();
+            $table->string('ten')->nullable();
         });
     }
 
@@ -24,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('KPI');
+        Schema::dropIfExists('GoiDichVu');
     }
 };

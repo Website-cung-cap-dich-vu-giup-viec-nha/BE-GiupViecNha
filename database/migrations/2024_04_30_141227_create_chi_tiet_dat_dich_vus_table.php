@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('idDatDichVu')->nullable()->constrained('DatDichVu');
             $table->foreignId('idNhanVien')->nullable()->constrained('NhanVien');
             $table->boolean('isTruongNhom')->nullable();
+            $table->date('NgayLam')->nullable();
         });
     }
 
