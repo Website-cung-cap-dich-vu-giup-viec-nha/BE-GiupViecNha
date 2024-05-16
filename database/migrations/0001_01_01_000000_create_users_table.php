@@ -20,7 +20,6 @@ return new class extends Migration
             $table->rememberToken()->nullable();
             $table->timestamps();
             $table->string('SDT')->nullable();
-            $table->string('MatKhau')->nullable();
             $table->string('Anh')->nullable();
         });
 

@@ -16,13 +16,7 @@ return new class extends Migration
             $table->foreignId('idNhanVien')->nullable()->constrained('NhanVien');
             $table->date('Thang')->nullable();
             $table->double('SoSao')->nullable();
-            $table->double('LuongCoBan')->nullable();
-            $table->double('PhuCap')->nullable();
-            $table->double('TongLuong')->nullable();
-            $table->double('BaoHiemXaHoi')->nullable();
-            $table->double('LuongThucNhan')->nullable();
-            $table->double('LuongDaTra')->nullable();
-            $table->double('LuongConNo')->nullable();
+            $table->double('Luong')->nullable();
             $table->double('TinhTrang')->nullable();
         });
     }
