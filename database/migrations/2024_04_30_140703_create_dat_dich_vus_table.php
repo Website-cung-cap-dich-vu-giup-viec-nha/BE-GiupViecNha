@@ -15,15 +15,15 @@ return new class extends Migration
             $table->id();
             $table->double('Tongtien')->nullable();
             $table->date('NgayBatDau')->nullable();
-            $table->date('NgayKetThuc')->nullable();
-            $table->time('ThoiGianBatDau')->nullable();
-            $table->time('ThoiGianKetThuc')->nullable();
+            $table->integer('SoBuoi')->nullable();
+            $table->integer('SoGio')->nullable();
+            $table->integer('SoNguoiDuocChamSoc')->nullable();
+            $table->time('GioBatDau')->nullable();
             $table->string('GhiChu')->nullable();
+            $table->integer('TinhTrang')->nullable();
             $table->foreignId('idDiaChi')->nullable()->constrained('DiaChi');
             $table->foreignId('idKhachHang')->nullable()->constrained('KhachHang');
-            $table->integer('TrangThai')->nullable();
-            $table->foreignId('idBangGiaDichVu')->nullable()->constrained('BangGiaDichVu');
-            $table->foreignId('idGoiDichVu')->nullable()->constrained('GoiDichVu');
+            $table->foreignId('idChiTietDichVu')->nullable()->constrained('ChiTietDichVu');
         });
     }
 
