@@ -20,7 +20,8 @@ return new class extends Migration
             $table->integer('SoNguoiDuocChamSoc')->nullable();
             $table->time('GioBatDau')->nullable();
             $table->string('GhiChu')->nullable();
-            $table->integer('TinhTrang')->nullable();
+            $table->integer('TinhTrang')->nullable(); //Đơn dịch vụ được duyệt chưa
+            $table->integer('TinhTrangThanhToan')->nullable();
             $table->foreignId('idDiaChi')->nullable()->constrained('DiaChi');
             $table->foreignId('idKhachHang')->nullable()->constrained('KhachHang');
             $table->foreignId('idChiTietDichVu')->nullable()->constrained('ChiTietDichVu');

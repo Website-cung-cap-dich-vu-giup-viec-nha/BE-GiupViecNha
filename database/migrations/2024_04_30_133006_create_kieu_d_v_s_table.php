@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('KieuDichVu', function (Blueprint $table) {
             $table->id();
-            $table->string('ten')->nullable();
+            $table->string('tenKieuDichVu')->nullable();
         });
     }
 
