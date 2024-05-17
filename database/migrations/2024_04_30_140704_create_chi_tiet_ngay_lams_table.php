@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('ChiTietNgayLam', function (Blueprint $table) {
             $table->id();
-            $table->integer('Thu')->nullable();
+            $table->date('NgayLam')->nullable();
             $table->foreignId('idDatDichVu')->nullable()->constrained('DatDichVu');
             $table->string('GhiChu')->nullable();
             $table->integer('TinhTrangDichVu')->nullable(); // 1: Chưa phân nhân viên, 2: Đã đủ NV, 3: Đang làm DV, 4: Đã hoàn thành
