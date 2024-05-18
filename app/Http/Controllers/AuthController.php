@@ -15,14 +15,14 @@ class AuthController extends Controller
         // Validation
         $request->validate([
             "name" => "required|string",
-            "email" => "required|string|email|unique:users",
+            "SDT" => 'required|phone_number|unique:users,SDT',
             "password" => "required|confirmed" // password_confirmation
         ]);
 
         // User model to save user in database
         User::create([
             "name" => $request->name,
-            "email" => $request->email,
+            "SDT" => $request->SDT,
             "password" => bcrypt($request->password)
         ]);
 
@@ -38,7 +38,7 @@ class AuthController extends Controller
 
         // Validation
         $request->validate([
-            "email" => "required|email",
+            "SDT" => "required|phone_number",
             "password" => "required"
         ]);
 
@@ -49,7 +49,7 @@ class AuthController extends Controller
         // ]);
 
         $token = auth()->attempt([
-            "email" => $request->email,
+            "SDT" => $request->SDT,
             "password" => $request->password
         ]);
 
@@ -81,7 +81,7 @@ class AuthController extends Controller
             "message" => "Profile data",
             "user" => $userData,
             "user_id" => request()->user()->id,
-            "email" => request()->user()->email
+            "SDT" => request()->user()->SDT
         ]);
     }
 
@@ -100,7 +100,7 @@ class AuthController extends Controller
 
     // Logout API - GET (JWT Auth Token)
     public function logout(){
-        
+
         auth()->logout();
 
         return response()->json([
