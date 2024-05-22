@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('DatDichVu', function (Blueprint $table) {
-            $table->id();
+        Schema::create('PhieuDichVu', function (Blueprint $table) {
+            $table->id('idPhieuDichVu');
             $table->double('Tongtien')->nullable();
             $table->date('NgayBatDau')->nullable();
             $table->integer('SoBuoi')->nullable();
@@ -22,9 +22,10 @@ return new class extends Migration
             $table->string('GhiChu')->nullable();
             $table->integer('TinhTrang')->nullable(); //Đơn dịch vụ được duyệt chưa
             $table->integer('TinhTrangThanhToan')->nullable();
-            $table->foreignId('idDiaChi')->nullable()->constrained('DiaChi');
-            $table->foreignId('idKhachHang')->nullable()->constrained('KhachHang');
-            $table->foreignId('idChiTietDichVu')->nullable()->constrained('ChiTietDichVu');
+            $table->foreignId('idDiaChi')->nullable()->references('idDiaChi')->on('DiaChi');
+            $table->foreignId('idKhachHang')->nullable()->references('idKhachHang')->on('KhachHang');
+            $table->foreignId('idChiTietDichVu')->nullable()->references('idChiTietDichVu')->on('ChiTietDichVu');
+            $table->foreignId('idNhanVienQuanLyDichVu')->nullable()->references('idNhanVien')->on('NhanVien');
         });
     }
 
@@ -33,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('DatDichVu');
+        Schema::dropIfExists('PhieuDichVu');
     }
 };
