@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
     // Register API - POST (name, email, password)
-    public function register(Request $request){
+    public function register(Request $request)
+    {
 
         // Validation
         $request->validate([
@@ -34,7 +37,8 @@ class AuthController extends Controller
     }
 
     // Login API - POST (email, password)
-    public function login(Request $request){
+    public function login(Request $request)
+    {
 
         // Validation
         $request->validate([
@@ -53,7 +57,7 @@ class AuthController extends Controller
             "password" => $request->password
         ]);
 
-        if(!$token){
+        if (!$token) {
 
             return response()->json([
                 "status" => false,
@@ -67,11 +71,11 @@ class AuthController extends Controller
             "token" => $token,
             "expires_in" => auth()->factory()->getTTL() * 60
         ]);
-
     }
 
     // Profile API - GET (JWT Auth Token)
-    public function profile(){
+    public function profile()
+    {
 
         //$userData = auth()->user();
         $userData = request()->user();
@@ -86,7 +90,8 @@ class AuthController extends Controller
     }
 
     // Refresh Token API - GET (JWT Auth Token)
-    public function refreshToken(){
+    public function refreshToken()
+    {
 
         $token = auth()->refresh();
 
@@ -99,7 +104,8 @@ class AuthController extends Controller
     }
 
     // Logout API - GET (JWT Auth Token)
-    public function logout(){
+    public function logout()
+    {
 
         auth()->logout();
 
@@ -107,5 +113,49 @@ class AuthController extends Controller
             "status" => true,
             "message" => "User logged out"
         ]);
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        // Xác thực dữ liệu yêu cầu
+        $request->validate([
+            'name' => 'required|string',
+            'GioiTinh' => 'nullable|string',
+            'NgaySinh' => 'nullable|date',
+        ]);
+
+        // Tìm người dùng cần cập nhật
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        // Cập nhật thông tin người dùng
+        $user->name = $request->input('name');
+        $user->GioiTinh = $request->input('GioiTinh');
+        $user->NgaySinh = $request->input('NgaySinh');
+
+        // Kiểm tra xem có file ảnh mới được upload hay không
+        if ($request->hasFile('Anh')) {
+            // Xóa ảnh cũ nếu tồn tại
+            if ($user->Anh) {
+                File::delete($user->Anh);
+            }
+
+            // Lưu ảnh mới
+            $user->Anh = $request->file('Anh')->store('users');
+        }
+
+        // Lưu các thay đổi
+        $user->save();
+
+        // Trả về phản hồi
+        return response()->json([
+            'message' => 'User updated successfully',
+            'user' => $user
+        ], 200);
     }
 }

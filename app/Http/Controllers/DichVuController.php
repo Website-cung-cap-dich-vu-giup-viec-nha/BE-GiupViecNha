@@ -12,7 +12,7 @@ class DichVuController extends Controller
      */
     public function index()
     {
-        //
+        return DichVu::all();
     }
 
     /**
