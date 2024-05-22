@@ -12,20 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('BangLuong', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('idNhanVien')->nullable()->constrained('users');
-            $table->date('Thang');
-            $table->double('SoSao');
-            $table->double('LuongCoBan');
-            $table->double('PhuCap');
-            $table->double('SoKPICoBan');
-            $table->double('SoKPIThucTe');
-            $table->double('TongLuong');
-            $table->double('BaoHiemXaHoi');
-            $table->double('LuongThucNhan');
-            $table->double('LuongDaTra');
-            $table->double('LuongConNo');
-            $table->double('TinhTrang');
+            $table->id('idBangLuong');
+            $table->foreignId('idNhanVien')->nullable()->references('idNhanVien')->on('NhanVien');
+            $table->date('NgayXuatBangLuong')->nullable();
+            $table->double('SoSao')->nullable();
+            $table->double('Luong')->nullable();
+            $table->double('TinhTrang')->nullable();
         });
     }
 

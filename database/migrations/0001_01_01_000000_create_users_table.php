@@ -20,10 +20,7 @@ return new class extends Migration
             $table->rememberToken()->nullable();
             $table->timestamps();
             $table->string('SDT')->nullable();
-            $table->string('MatKhau')->nullable();
-            $table->boolean('isKhachHang')->nullable();
-            $table->double('soSao')->nullable();
-            $table->double('HeSoLuong')->nullable();
+            $table->string('Anh')->nullable();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ThongBao', function (Blueprint $table) {
-            $table->id('idThongBao');
-            $table->string('TieuDe')->nullable();
-            $table->string('NoiDung')->nullable();
+        Schema::create('ChiTietNgayLam', function (Blueprint $table) {
+            $table->id('idChiTietNgayLam');
+            $table->date('NgayLam')->nullable();
             $table->foreignId('idPhieuDichVu')->nullable()->references('idPhieuDichVu')->on('PhieuDichVu');
+            $table->string('GhiChu')->nullable();
+            $table->integer('TinhTrangDichVu')->nullable(); // 1: Chưa phân nhân viên, 2: Đã đủ NV, 3: Đang làm DV, 4: Đã hoàn thành
         });
     }
 
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ThongBao');
+        Schema::dropIfExists('ChiTietNgayLam');
     }
 };

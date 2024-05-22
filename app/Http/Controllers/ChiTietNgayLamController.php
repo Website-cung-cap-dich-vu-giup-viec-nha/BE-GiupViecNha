@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DichVu;
+use App\Models\ChiTietNgayLam;
 use Illuminate\Http\Request;
 
-class DichVuController extends Controller
+class ChiTietNgayLamController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return DichVu::all();
+        //
     }
 
     /**
@@ -34,7 +34,7 @@ class DichVuController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(DichVu $dichVu)
+    public function show(ChiTietNgayLam $chiTietNgayLam)
     {
         //
     }
@@ -42,7 +42,7 @@ class DichVuController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(DichVu $dichVu)
+    public function edit(ChiTietNgayLam $chiTietNgayLam)
     {
         //
     }
@@ -50,7 +50,7 @@ class DichVuController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, DichVu $dichVu)
+    public function update(Request $request, ChiTietNgayLam $chiTietNgayLam)
     {
         //
     }
@@ -58,7 +58,7 @@ class DichVuController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DichVu $dichVu)
+    public function destroy(ChiTietNgayLam $chiTietNgayLam)
     {
         //
     }
