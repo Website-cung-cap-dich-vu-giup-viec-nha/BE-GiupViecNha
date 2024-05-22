@@ -6,23 +6,26 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
     // Register API - POST (name, email, password)
-    public function register(Request $request){
+    public function register(Request $request)
+    {
 
         // Validation
         $request->validate([
             "name" => "required|string",
-            "email" => "required|string|email|unique:users",
+            "SDT" => 'required|phone_number|unique:users,SDT',
             "password" => "required|confirmed" // password_confirmation
         ]);
 
         // User model to save user in database
         User::create([
             "name" => $request->name,
-            "email" => $request->email,
+            "SDT" => $request->SDT,
             "password" => bcrypt($request->password)
         ]);
 
@@ -34,11 +37,12 @@ class AuthController extends Controller
     }
 
     // Login API - POST (email, password)
-    public function login(Request $request){
+    public function login(Request $request)
+    {
 
         // Validation
         $request->validate([
-            "email" => "required|email",
+            "SDT" => "required|phone_number",
             "password" => "required"
         ]);
 
@@ -49,11 +53,11 @@ class AuthController extends Controller
         // ]);
 
         $token = auth()->attempt([
-            "email" => $request->email,
+            "SDT" => $request->SDT,
             "password" => $request->password
         ]);
 
-        if(!$token){
+        if (!$token) {
 
             return response()->json([
                 "status" => false,
@@ -67,11 +71,11 @@ class AuthController extends Controller
             "token" => $token,
             "expires_in" => auth()->factory()->getTTL() * 60
         ]);
-
     }
 
     // Profile API - GET (JWT Auth Token)
-    public function profile(){
+    public function profile()
+    {
 
         //$userData = auth()->user();
         $userData = request()->user();
@@ -81,12 +85,13 @@ class AuthController extends Controller
             "message" => "Profile data",
             "user" => $userData,
             "user_id" => request()->user()->id,
-            "email" => request()->user()->email
+            "SDT" => request()->user()->SDT
         ]);
     }
 
     // Refresh Token API - GET (JWT Auth Token)
-    public function refreshToken(){
+    public function refreshToken()
+    {
 
         $token = auth()->refresh();
 
@@ -99,13 +104,91 @@ class AuthController extends Controller
     }
 
     // Logout API - GET (JWT Auth Token)
-    public function logout(){
-        
+    public function logout()
+    {
+
         auth()->logout();
 
         return response()->json([
             "status" => true,
             "message" => "User logged out"
+        ]);
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        // Xác thực dữ liệu yêu cầu
+        $request->validate([
+            'name' => 'required|string',
+            'GioiTinh' => 'nullable|string',
+            'NgaySinh' => 'nullable|date',
+        ]);
+
+        // Tìm người dùng cần cập nhật
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        // Cập nhật thông tin người dùng
+        $user->name = $request->input('name');
+        $user->GioiTinh = $request->input('GioiTinh');
+        $user->NgaySinh = $request->input('NgaySinh');
+
+        // Kiểm tra xem có file ảnh mới được upload hay không
+        if ($request->hasFile('Anh')) {
+            // Xóa ảnh cũ nếu tồn tại
+            if ($user->Anh) {
+                File::delete($user->Anh);
+            }
+
+            // Lưu ảnh mới
+            $user->Anh = $request->file('Anh')->store('users');
+        }
+
+        // Lưu các thay đổi
+        $user->save();
+
+        // Trả về phản hồi
+        return response()->json([
+            'message' => 'User updated successfully',
+            'user' => $user
+        ], 200);
+    }
+
+    public function doiMatKhau(Request $request)
+    {
+        $request->validate([
+            "id" => "required",
+            "password" => "required",
+            "newPass" => "required",
+            "rePass" => "required"
+        ]);
+
+        if ($request->newPass != $request->rePass) {
+            return response()->json([
+                "status" => false,
+                "message" => "Mật khẩu nhập lại không khớp!"
+            ]);
+        }
+
+        $user = User::findOrFail($request->id);
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json([
+                "status" => false,
+                "message" => "Mật khẩu không đúng!"
+            ]);
+        }
+
+        $user->password = bcrypt($request->newPass);
+        $user->save();
+
+        return response()->json([
+            "status" => true,
+            "message" => "Đổi mật khẩu thành công!"
         ]);
     }
 }

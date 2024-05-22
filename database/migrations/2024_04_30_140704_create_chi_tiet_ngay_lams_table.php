@@ -12,13 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ChiTietNgayLam', function (Blueprint $table) {
-            $table->id();
-            $table->integer('Thu')->nullable();
-            $table->foreignId('idDatDichVu')->nullable()->constrained('DatDichVu');
-            $table->integer('TinhTrang')->nullable();
+            $table->id('idChiTietNgayLam');
+            $table->date('NgayLam')->nullable();
+            $table->foreignId('idPhieuDichVu')->nullable()->references('idPhieuDichVu')->on('PhieuDichVu');
             $table->string('GhiChu')->nullable();
-            $table->integer('TinhTrangDichVu')->nullable();
-            $table->integer('TinhTrangThanhToan')->nullable();
+            $table->integer('TinhTrangDichVu')->nullable(); // 1: Chưa phân nhân viên, 2: Đã đủ NV, 3: Đang làm DV, 4: Đã hoàn thành
         });
     }
 
