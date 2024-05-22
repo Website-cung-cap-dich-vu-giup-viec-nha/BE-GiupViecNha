@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('BangLuong', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('idNhanVien')->nullable()->constrained('NhanVien');
-            $table->date('Thang')->nullable();
+            $table->id('idBangLuong');
+            $table->foreignId('idNhanVien')->nullable()->references('idNhanVien')->on('NhanVien');
+            $table->date('NgayXuatBangLuong')->nullable();
             $table->double('SoSao')->nullable();
             $table->double('Luong')->nullable();
             $table->double('TinhTrang')->nullable();
