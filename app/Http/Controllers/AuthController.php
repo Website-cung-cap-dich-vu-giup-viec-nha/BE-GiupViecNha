@@ -158,4 +158,37 @@ class AuthController extends Controller
             'user' => $user
         ], 200);
     }
+
+    public function doiMatKhau(Request $request)
+    {
+        $request->validate([
+            "id" => "required",
+            "password" => "required",
+            "newPass" => "required",
+            "rePass" => "required"
+        ]);
+
+        if ($request->newPass != $request->rePass) {
+            return response()->json([
+                "status" => false,
+                "message" => "Mật khẩu nhập lại không khớp!"
+            ]);
+        }
+
+        $user = User::findOrFail($request->id);
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json([
+                "status" => false,
+                "message" => "Mật khẩu không đúng!"
+            ]);
+        }
+
+        $user->password = bcrypt($request->newPass);
+        $user->save();
+
+        return response()->json([
+            "status" => true,
+            "message" => "Đổi mật khẩu thành công!"
+        ]);
+    }
 }
