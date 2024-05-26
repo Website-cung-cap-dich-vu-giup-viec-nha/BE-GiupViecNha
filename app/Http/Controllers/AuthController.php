@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\ChucVu;
+use App\Models\NhanVien;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -81,13 +83,29 @@ class AuthController extends Controller
         //$userData = auth()->user();
         $userData = request()->user();
 
-        return response()->json([
-            "status" => true,
-            "message" => "Profile data",
-            "user" => $userData,
-            "user_id" => request()->user()->id,
-            "SDT" => request()->user()->SDT
-        ]);
+        $staffData = NhanVien::where('idNguoiDung', $userData->id)->first();
+
+        if ($staffData != null) {
+            $position = ChucVu::findOrFail($staffData->idChucVu);
+        }
+        if ($staffData != null) {
+            return response()->json([
+                "status" => true,
+                "message" => "Profile data",
+                "user" => $userData,
+                "position" => $position,
+                "user_id" => request()->user()->id,
+                "SDT" => request()->user()->SDT
+            ]);
+        } else {
+            return response()->json([
+                "status" => true,
+                "message" => "Profile data",
+                "user" => $userData,
+                "user_id" => request()->user()->id,
+                "SDT" => request()->user()->SDT
+            ]);
+        }
     }
 
     // Refresh Token API - GET (JWT Auth Token)

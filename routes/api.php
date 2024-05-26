@@ -5,6 +5,7 @@ use App\Http\Controllers\ChiTietDichVuController;
 use App\Http\Controllers\DatDichVuController;
 use App\Http\Controllers\DichVuController;
 use App\Http\Controllers\KhachHangController;
+use App\Http\Controllers\NhanVienController;
 use App\Models\DatDichVu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,7 +25,12 @@ Route::group([
     Route::get("profile", [AuthController::class, "profile"]);
     Route::get("refresh-token", [AuthController::class, "refreshToken"]);
     Route::get("logout", [AuthController::class, "logout"]);
+});
 
+Route::group([
+    "middleware" => ["auth:api"]
+], function(){
+    Route::apiResource('NhanVien', NhanVienController::class);
 });
 
 Route::get("layChiTietDVTheoIdDV/{id}", [ChiTietDichVuController::class, "layChiTietDVTheoIdDV"]);
