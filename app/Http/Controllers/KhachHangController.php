@@ -62,4 +62,8 @@ class KhachHangController extends Controller
     {
         //
     }
+
+    public function layIdKhachHang($id){
+        return KhachHang::where("idNguoiDung", $id)->pluck("idKhachHang");
+    }
 }
