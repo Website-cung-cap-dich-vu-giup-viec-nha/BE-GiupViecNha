@@ -10,9 +10,24 @@ class NhanVienController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $searchData = $request->query('searchData');
+
+        $query = NhanVien::join('users', 'users.id', '=', 'NhanVien.idNguoiDung');
+
+        $query->where('name', 'like', '%' . $searchData . '%')
+            ->orWhere('SDT', 'like', '%' . $searchData . '%')
+            ->orWhere('email', 'like', '%' . $searchData . '%');
+
+        $nhanVien = $query->select('NhanVien.*', 'users.*')->get();
+
+        $total = $query->count();
+
+        return response()->json([
+            'total' => $total,
+            'data' => $nhanVien,
+        ]);
     }
 
     /**
