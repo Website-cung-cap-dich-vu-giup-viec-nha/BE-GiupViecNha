@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class ChiTietNgayLam extends Model
 {
     use HasFactory;
+    protected $table = "chitietngaylam";
+    protected $fillable = [
+        "idChiTietNgayLam",
+        "NgayLam",
+        "idPhieuDichVu",
+        "GhiChu",
+        "TinhTrangDichVu"
+    ];
+    public $timestamps = false;
 }

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('Duong')->nullable();
             $table->foreignId('Phuong')->nullable()->constrained()->references('ward_id')->on('ward');
             $table->foreignId('idNguoiDung')->nullable()->constrained('users');
+            $table->boolean('MacDinh')->nullable();
         });
     }
 

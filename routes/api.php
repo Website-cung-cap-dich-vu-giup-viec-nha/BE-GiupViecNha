@@ -1,7 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChiTietDichVuController;
+use App\Http\Controllers\DatDichVuController;
 use App\Http\Controllers\DichVuController;
+use App\Http\Controllers\KhachHangController;
+use App\Models\DatDichVu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,5 +27,8 @@ Route::group([
 
 });
 
-
+Route::get("layChiTietDVTheoIdDV/{id}", [ChiTietDichVuController::class, "layChiTietDVTheoIdDV"]);
 Route::resource('dichvu', DichVuController::class);
+Route::resource('phieudichvu', DatDichVuController::class);
+Route::get('layIdKhachHang/{id}', [KhachHangController::class, "layIdKhachHang"]);
+

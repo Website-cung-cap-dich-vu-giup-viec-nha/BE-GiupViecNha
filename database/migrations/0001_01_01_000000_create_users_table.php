@@ -21,6 +21,8 @@ return new class extends Migration
             $table->timestamps();
             $table->string('SDT')->nullable();
             $table->string('Anh')->nullable();
+            $table->string('GioiTinh')->nullable();
+            $table->date('NgaySinh')->nullable();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

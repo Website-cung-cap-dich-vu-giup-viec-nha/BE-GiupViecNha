@@ -12,7 +12,7 @@ class ChiTietDichVuController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -61,5 +61,9 @@ class ChiTietDichVuController extends Controller
     public function destroy(ChiTietDichVu $chiTietDichVu)
     {
         //
+    }
+
+    public function layChiTietDVTheoIdDV($id){
+        return ChiTietDichVu::where("idDichVu",$id)->get();
     }
 }
