@@ -84,11 +84,11 @@ class AuthController extends Controller
         $userData = request()->user();
 
         $staffData = NhanVien::where('idNguoiDung', $userData->id)->first();
-
-        if ($staffData != null) {
+        $position = null;
+        if ($staffData != null && !empty($staffData?->idChucVu)) {
             $position = ChucVu::findOrFail($staffData->idChucVu);
         }
-        if ($staffData != null) {
+        if ($staffData != null && $position != null) {
             return response()->json([
                 "status" => true,
                 "message" => "Profile data",
