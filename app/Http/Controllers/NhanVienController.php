@@ -13,14 +13,48 @@ class NhanVienController extends Controller
     public function index(Request $request)
     {
         $searchData = $request->query('searchData');
+        $start = $request->query('start', null);
+        $take = $request->query('take', null);
 
-        $query = NhanVien::join('users', 'users.id', '=', 'NhanVien.idNguoiDung');
+        $query = NhanVien::leftJoin('users', 'users.id', '=', 'NhanVien.idNguoiDung')
+                        ->leftJoin('ChucVu', 'ChucVu.idChucVu', '=', 'NhanVien.idChucVu');
 
         $query->where('name', 'like', '%' . $searchData . '%')
             ->orWhere('SDT', 'like', '%' . $searchData . '%')
             ->orWhere('email', 'like', '%' . $searchData . '%');
 
-        $nhanVien = $query->select('NhanVien.*', 'users.*')->get();
+        $nhanVien = null;
+
+        if ($start == null || $take == null) {
+            $nhanVien = $query->select(
+                'NhanVien.idNhanVien',
+                'users.name',
+                'users.email',
+                'users.SDT',
+                'users.GioiTinh',
+                'users.NgaySinh',
+                'NhanVien.SoSao',
+                'ChucVu.tenChucVu'
+            )->get();
+
+            $newRow = [
+                'idNhanVien' => "Mã nhân viên",
+                'name' => 'Họ và tên nhân viên',
+                'email' => 'Email',
+                'SDT' => 'Số điện thoại',
+                'GioiTinh' => 'Giới tính',
+                'NgaySinh' => 'Ngày sinh',
+                'SoSao' => "Số sao",
+                'tenChucVu' => 'Chức vụ'
+            ];
+
+            $nhanVien->prepend($newRow);
+        } else {
+            $nhanVien = $query->select('NhanVien.*', 'users.*')
+                ->skip($start)
+                ->take($take)
+                ->get();
+        }
 
         $total = $query->count();
 
@@ -76,5 +110,28 @@ class NhanVienController extends Controller
     public function destroy(NhanVien $nhanVien)
     {
         //
+    }
+
+    public function exportImportHeaderData()
+    {
+
+        $nhanVien = [];
+
+        $newRow = [
+            'idNhanVien' => "Mã nhân viên",
+            'name' => 'Họ và tên nhân viên',
+            'email' => 'Email',
+            'SDT' => 'Số điện thoại',
+            'GioiTinh' => 'Giới tính',
+            'NgaySinh' => 'Ngày sinh',
+            'SoSao' => "Số sao",
+            'tenChucVu' => 'Chức vụ'
+        ];
+
+        array_unshift($nhanVien, $newRow);
+
+        return response()->json([
+            'data' => $nhanVien,
+        ]);
     }
 }
