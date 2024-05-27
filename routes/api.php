@@ -30,6 +30,8 @@ Route::group([
 Route::group([
     "middleware" => ["auth:api"]
 ], function(){
+    Route::post('NhanVien/importData', [NhanVienController::class, 'importData']);
+    Route::get('NhanVien/exportImportHeaderData', [NhanVienController::class, 'exportImportHeaderData']);
     Route::apiResource('NhanVien', NhanVienController::class);
 });
 
