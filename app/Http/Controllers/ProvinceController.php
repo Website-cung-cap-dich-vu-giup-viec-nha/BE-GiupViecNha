@@ -13,6 +13,7 @@ class ProvinceController extends Controller
     public function index()
     {
         //
+        return province::all();
     }
 
     /**

@@ -62,4 +62,9 @@ class WardController extends Controller
     {
         //
     }
+
+    public function layXaByDistrictId($id)
+    {
+        return ward::where("district_id", $id)->get();
+    }
 }
