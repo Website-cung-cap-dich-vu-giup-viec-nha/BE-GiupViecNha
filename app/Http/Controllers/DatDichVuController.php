@@ -85,9 +85,14 @@ class DatDichVuController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(DatDichVu $datDichVu)
+    public function show($id)
     {
-        //
+        // return $id;
+        return DatDichVu::select('phieudichvu.*', 'dichvu.tenDichVu', 'chitietdichvu.BuoiDangKyDichVu')
+        ->leftJoin('chitietdichvu', 'phieudichvu.idChiTietDichVu', '=', 'chitietdichvu.idChiTietDichVu')
+        ->leftJoin('dichvu', 'chitietdichvu.idDichVu', '=', 'dichvu.idDichVu')
+        ->where('phieudichvu.idPhieuDichVu', $id)
+        ->get();
     }
 
     /**
@@ -112,5 +117,13 @@ class DatDichVuController extends Controller
     public function destroy(DatDichVu $datDichVu)
     {
         //
+    }
+
+    public function layPhieuDichVuTheoIdKhachHang($id){
+        return DatDichVu::select('phieudichvu.*', 'dichvu.tenDichVu')
+        ->leftJoin('chitietdichvu', 'phieudichvu.idChiTietDichVu', '=', 'chitietdichvu.idChiTietDichVu')
+        ->leftJoin('dichvu', 'chitietdichvu.idDichVu', '=', 'dichvu.idDichVu')
+        ->where('phieudichvu.idKhachHang', $id)
+        ->get();
     }
 }

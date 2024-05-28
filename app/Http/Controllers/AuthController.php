@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\ChucVu;
+use App\Models\KhachHang;
 use App\Models\NhanVien;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -22,14 +23,20 @@ class AuthController extends Controller
         $request->validate([
             "name" => "required|string",
             "SDT" => 'required|phone_number|unique:users,SDT',
+            "email" => 'required|email',
             "password" => "required|confirmed" // password_confirmation
         ]);
 
         // User model to save user in database
-        User::create([
+       $user = User::create([
             "name" => $request->name,
             "SDT" => $request->SDT,
+            "email" => $request->email,
             "password" => bcrypt($request->password)
+        ]);
+
+        KhachHang::create([
+            "idNguoiDung" => $user->id
         ]);
 
         return response()->json([

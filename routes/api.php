@@ -48,3 +48,5 @@ Route::resource('province', ProvinceController::class);
 Route::get('layDiaChiByIdNguoiDung/{id}', [DiaChiController::class,'layDiaChiByIdNguoiDung']);
 Route::get('layHuyenByProvinceId/{id}', [DistrictController::class,'layHuyenByProvinceId']);
 Route::get('layXaByDistrictId/{id}', [WardController::class,'layXaByDistrictId']);
+Route::get("layPhieuDichVuTheoIdKhachHang/{id}",[DatDichVuController::class,"layPhieuDichVuTheoIdKhachHang"]);
+Route::resource('phieudichvu', DatDichVuController::class);

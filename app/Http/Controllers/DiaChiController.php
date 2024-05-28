@@ -45,9 +45,15 @@ class DiaChiController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(DiaChi $diaChi)
+    public function show($id)
     {
         //
+        return DiaChi::select('diachi.idDiaChi', 'diachi.Duong', 'ward.ward_name', 'district.district_name', 'province.province_name')
+            ->leftJoin('ward', 'diachi.Phuong', '=', 'ward.ward_id')
+            ->leftJoin('district', 'ward.district_id', '=', 'district.district_id')
+            ->leftJoin('province', 'district.province_id', '=', 'province.province_id')
+            ->where('diachi.idDiaChi', $id)
+            ->first();
     }
 
     /**
@@ -96,10 +102,10 @@ class DiaChiController extends Controller
     public function layDiaChiByIdNguoiDung($id)
     {
         return DiaChi::select('diachi.Duong', 'ward.ward_name', 'district.district_name', 'province.province_name', 'diachi.MacDinh', 'diachi.idDiaChi')
-        ->join('ward', 'diachi.Phuong', '=', 'ward.ward_id')
-        ->join('district', 'ward.district_id', '=', 'district.district_id')
-        ->join('province', 'district.province_id', '=', 'province.province_id')
-        ->where('diachi.idNguoiDung', $id)
-        ->get();
+            ->join('ward', 'diachi.Phuong', '=', 'ward.ward_id')
+            ->join('district', 'ward.district_id', '=', 'district.district_id')
+            ->join('province', 'district.province_id', '=', 'province.province_id')
+            ->where('diachi.idNguoiDung', $id)
+            ->get();
     }
 }
