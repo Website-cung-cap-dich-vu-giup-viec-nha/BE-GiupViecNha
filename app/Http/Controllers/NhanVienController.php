@@ -54,7 +54,7 @@ class NhanVienController extends Controller
 
             $nhanVien->prepend($newRow);
         } else {
-            $nhanVien = $query->select('NhanVien.*', 'users.*')
+            $nhanVien = $query->select('NhanVien.*', 'users.*', 'ChucVu.*')
                 ->skip($start)
                 ->take($take)
                 ->get();
