@@ -142,7 +142,7 @@ class NhanVienController extends Controller
         $data = $request->input();
 
         if (empty($data)) {
-            return response()->json(['errors' => ['Không tồn tại dữ liệu']], 422);
+            return response()->json(['message' => ['Không tồn tại dữ liệu']], 422);
         }
 
         // Header mẫu
@@ -162,7 +162,7 @@ class NhanVienController extends Controller
         $diff = array_diff_assoc($headers, $firstRow);
 
         if (!empty($diff)) {
-            return response()->json(['errors' => $diff], 422);
+            return response()->json(['message' => $diff], 422);
         }
 
         $errors = [];
@@ -221,15 +221,22 @@ class NhanVienController extends Controller
         }
 
         if (!empty($errors)) {
-            return response()->json(['errors' => $errors], 422);
+            return response()->json(['message' => $errors], 422);
         }
 
         // Thêm dữ liệu vào bảng users
-        User::insert($validatedUserData);
+        $insertedUsers = [];
+        foreach ($validatedUserData as $userData) {
+            $user = User::create($userData);
+            $insertedUsers[] = $user;
+        }
 
-        // Thêm dữ liệu vào bảng NhanVien
-        NhanVien::insert($validatedNhanVienData);
+        // Cập nhật idNguoiDung cho bảng NhanVien
+        foreach ($validatedNhanVienData as $index => $nhanVienData) {
+            $nhanVienData['idNguoiDung'] = $insertedUsers[$index]->id;
+            NhanVien::create($nhanVienData);
+        }
 
-        return response()->json(['message' => 'Data imported successfully'], 200);
+        return response()->json(['message' => ['Thêm dữ liệu vào hệ thống thành công']], 200);
     }
 }
