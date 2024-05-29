@@ -12,7 +12,7 @@ class PhongBanController extends Controller
      */
     public function index()
     {
-        //
+        return PhongBan::all();
     }
 
     /**

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChiTietDichVuController;
+use App\Http\Controllers\ChucVuController;
 use App\Http\Controllers\DatDichVuController;
 use App\Http\Controllers\DiaChiController;
 use App\Http\Controllers\DichVuController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\KhachHangController;
 use App\Http\Controllers\KieuDichVuController;
 use App\Http\Controllers\NhanVienController;
+use App\Http\Controllers\PhongBanController;
 use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\WardController;
 use App\Models\DatDichVu;
@@ -35,9 +37,12 @@ Route::group([
 Route::group([
     "middleware" => ["auth:api"]
 ], function(){
+    Route::get('ChucVu/getPositionByDepartment/{idPhongBan}', [ChucVuController::class, 'getPositionByDepartment']);
     Route::post('NhanVien/importData', [NhanVienController::class, 'importData']);
     Route::get('NhanVien/exportImportHeaderData', [NhanVienController::class, 'exportImportHeaderData']);
     Route::apiResource('NhanVien', NhanVienController::class);
+    Route::apiResource('ChucVu', ChucVuController::class);
+    Route::apiResource('PhongBan', PhongBanController::class);
 });
 
 Route::get("layChiTietDVTheoIdDV/{id}", [ChiTietDichVuController::class, "layChiTietDVTheoIdDV"]);
