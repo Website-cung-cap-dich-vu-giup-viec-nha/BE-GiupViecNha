@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('Anh')->nullable();
             $table->string('GioiTinh')->nullable();
             $table->date('NgaySinh')->nullable();
+            $table->boolean('status')->nullable();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

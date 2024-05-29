@@ -25,6 +25,8 @@ class User extends Authenticatable implements JWTSubject
         'SDT',
         'GioiTinh',
         'Anh',
+        'status',
+        'NgaySinh',
     ];
 
     /**

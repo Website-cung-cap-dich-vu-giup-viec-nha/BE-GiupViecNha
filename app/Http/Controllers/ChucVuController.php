@@ -12,7 +12,7 @@ class ChucVuController extends Controller
      */
     public function index()
     {
-        //
+        return ChucVu::all();
     }
 
     /**
@@ -61,5 +61,10 @@ class ChucVuController extends Controller
     public function destroy(ChucVu $chucVu)
     {
         //
+    }
+
+    public function getPositionByDepartment($idPhongBan)
+    {
+        return ChucVu::where('idPhongBan', $idPhongBan)->get();
     }
 }

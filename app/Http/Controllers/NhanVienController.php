@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\ChucVu;
 use App\Models\NhanVien;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
+use function Laravel\Prompts\confirm;
 
 class NhanVienController extends Controller
 {
@@ -81,7 +85,22 @@ class NhanVienController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|unique:users|email',
+            'SDT' => 'required|phone_number|unique:users,SDT',
+            'password' => 'required|confirmed',
+            'GioiTinh' => 'required|string',
+            'idPhongBan' => 'required|exists:PhongBan,idPhongBan',
+            'idChucVu' => 'required|exists:ChucVu,idChucVu',
+            'NgaySinh' => 'required',
+        ]);
+        $userData = $request->except(["idChucVu", "idPhongBan", "password_confirmation"]);
+        $user = User::create($userData);
+        $NhanVienData = $request->only(["idChucVu", "idPhongBan"]);
+        $NhanVienData["idNguoiDung"] = $user->id;
+        NhanVien::create($NhanVienData);
+        return response()->json(['message' => ['Thêm nhân viên thành công']], 200);
     }
 
     /**
@@ -103,17 +122,47 @@ class NhanVienController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, NhanVien $nhanVien)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($request->idNguoiDung),
+            ],
+            'SDT' => [
+                'required',
+                'phone_number',
+                Rule::unique('users', 'SDT')->ignore($request->idNguoiDung)
+            ],
+            'password' => 'required|confirmed',
+            'GioiTinh' => 'required|string',
+            'idPhongBan' => 'required|exists:PhongBan,idPhongBan',
+            'idChucVu' => 'required|exists:ChucVu,idChucVu',
+            'NgaySinh' => 'required',
+        ]);
+        $dataNhanVien = NhanVien::findOrFail($id);
+        $dataUser = User::findOrFail($dataNhanVien->idNguoiDung);
+        $userData = $request->except(["idChucVu", "idPhongBan", "password_confirmation"]);
+        $NhanVienData = $request->only(["idNguoiDung", "SoSao", "idChucVu", "idPhongBan"]);
+        $dataNhanVien->update($NhanVienData);
+        $NgaySinh = Carbon::parse($request->NgaySinh)->toDateString();
+        $userData['NgaySinh'] = $NgaySinh;
+        $dataUser->update($userData);
+        return response()->json(['message' => ['Sửa thông tin nhân viên thành công']], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(NhanVien $nhanVien)
+    public function destroy($id)
     {
-        //
+        // $staffData = NhanVien::findOrFail($id);
+        $userData = User::findOrFail($id);
+        $userData->status = 0;
+        $userData->save();
+        return response()->json(['message' => ['Xóa nhân viên thành công']], 200);
     }
 
     public function exportImportHeaderData()
