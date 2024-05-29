@@ -7,6 +7,7 @@ use App\Http\Controllers\DiaChiController;
 use App\Http\Controllers\DichVuController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\KhachHangController;
+use App\Http\Controllers\KieuDichVuController;
 use App\Http\Controllers\NhanVienController;
 use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\WardController;
@@ -50,3 +51,5 @@ Route::get('layHuyenByProvinceId/{id}', [DistrictController::class,'layHuyenByPr
 Route::get('layXaByDistrictId/{id}', [WardController::class,'layXaByDistrictId']);
 Route::get("layPhieuDichVuTheoIdKhachHang/{id}",[DatDichVuController::class,"layPhieuDichVuTheoIdKhachHang"]);
 Route::resource('phieudichvu', DatDichVuController::class);
+Route::get('layKieuDVByIdDV/{id}', [KieuDichVuController::class,'layKieuDVByIdDV']);
+Route::get("layChiTietDVTheoIdKieuDV/{id}", [ChiTietDichVuController::class, "layChiTietDVTheoIdKieuDV"]);

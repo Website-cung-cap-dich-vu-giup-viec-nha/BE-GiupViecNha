@@ -91,7 +91,8 @@ class DiaChiController extends Controller
     {
         //
         $diaChi = DiaChi::findOrFail($id);
-        $diaChi->delete();
+        $diaChi->HienThi = 0;
+        $diaChi->save();
 
         return response()->json([
             "status" => true,
@@ -106,6 +107,7 @@ class DiaChiController extends Controller
             ->join('district', 'ward.district_id', '=', 'district.district_id')
             ->join('province', 'district.province_id', '=', 'province.province_id')
             ->where('diachi.idNguoiDung', $id)
+            ->where('diachi.HienThi', 1)
             ->get();
     }
 }

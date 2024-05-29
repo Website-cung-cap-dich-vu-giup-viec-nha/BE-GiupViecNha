@@ -66,4 +66,8 @@ class ChiTietDichVuController extends Controller
     public function layChiTietDVTheoIdDV($id){
         return ChiTietDichVu::where("idDichVu",$id)->get();
     }
+
+    public function layChiTietDVTheoIdKieuDV($id){
+        return ChiTietDichVu::where("idKieuDichVu",$id)->get();
+    }
 }
