@@ -14,8 +14,9 @@ class DiaChi extends Model
         "idDiaChi",
         "Duong",
         "Phuong",
-        "idNguoiDung",
-        "MacDinh"
+        "MacDinh",
+        "HienThi",
+        "idNguoiDung"
     ];
     public $timestamps = false;
 }

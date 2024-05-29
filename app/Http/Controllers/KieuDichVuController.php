@@ -62,4 +62,13 @@ class KieuDichVuController extends Controller
     {
         //
     }
+
+    public function layKieuDVByIdDV($id)
+    {
+        return KieuDichVu::select('kieudichvu.*')
+            ->join('chitietdichvu', 'chitietdichvu.idKieuDichVu', '=', 'kieudichvu.idKieuDichVu')
+            ->where('chitietdichvu.idDichVu', '=', 2)
+            ->distinct()
+            ->get();
+    }
 }
