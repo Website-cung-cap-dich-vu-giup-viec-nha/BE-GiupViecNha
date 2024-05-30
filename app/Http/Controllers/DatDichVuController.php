@@ -67,7 +67,7 @@ class DatDichVuController extends Controller
         while ($soBuoiDaTao < $request->SoBuoi) {
             if (in_array($ngayHienTai->dayOfWeek, $thuSo)) {
                 ChiTietNgayLam::create([
-                    "idPhieuDichVu" => $datDV->id,
+                    "idPhieuDichVu" => $datDV->idPhieuDichVu,
                     "TinhTrangDichVu" => 1,
                     "NgayLam" => $ngayHienTai->format('Y-m-d')
                 ]);
@@ -106,9 +106,10 @@ class DatDichVuController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, DatDichVu $datDichVu)
+    public function update(Request $request)
     {
         //
+
     }
 
     /**
@@ -124,6 +125,7 @@ class DatDichVuController extends Controller
         ->leftJoin('chitietdichvu', 'phieudichvu.idChiTietDichVu', '=', 'chitietdichvu.idChiTietDichVu')
         ->leftJoin('dichvu', 'chitietdichvu.idDichVu', '=', 'dichvu.idDichVu')
         ->where('phieudichvu.idKhachHang', $id)
+        ->orderBy('phieudichvu.idPhieuDichVu', 'desc')
         ->get();
     }
 }
