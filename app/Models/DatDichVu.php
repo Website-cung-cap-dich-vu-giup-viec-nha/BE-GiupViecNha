@@ -9,7 +9,7 @@ class DatDichVu extends Model
 {
     use HasFactory;
     protected $table="phieudichvu";
-
+    protected $primaryKey = 'idPhieuDichVu';
     protected $fillable = [
         "idPhieuDichVu",
         "Tongtien",

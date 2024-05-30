@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChiTietDichVuController;
+use App\Http\Controllers\ChiTietNgayLamController;
 use App\Http\Controllers\ChucVuController;
 use App\Http\Controllers\DatDichVuController;
 use App\Http\Controllers\DiaChiController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\KieuDichVuController;
 use App\Http\Controllers\NhanVienController;
 use App\Http\Controllers\PhongBanController;
 use App\Http\Controllers\ProvinceController;
+use App\Http\Controllers\ThanhToanController;
 use App\Http\Controllers\WardController;
 use App\Models\DatDichVu;
 use Illuminate\Http\Request;
@@ -58,3 +60,8 @@ Route::get("layPhieuDichVuTheoIdKhachHang/{id}",[DatDichVuController::class,"lay
 Route::resource('phieudichvu', DatDichVuController::class);
 Route::get('layKieuDVByIdDV/{id}', [KieuDichVuController::class,'layKieuDVByIdDV']);
 Route::get("layChiTietDVTheoIdKieuDV/{id}", [ChiTietDichVuController::class, "layChiTietDVTheoIdKieuDV"]);
+Route::resource('chitietngaylam', ChiTietNgayLamController::class);
+Route::get('layChiTietNLTheoIdPDV/{id}', [ChiTietNgayLamController::class,'layChiTietNgayLamByIdPhieuDichVu']);
+
+Route::post('thanhtoanvnpay', [ThanhToanController::class,'thanhToanVnPay']);
+Route::get('xacnhanthanhtoan', [ThanhToanController::class,'xacNhanThanhToan']);

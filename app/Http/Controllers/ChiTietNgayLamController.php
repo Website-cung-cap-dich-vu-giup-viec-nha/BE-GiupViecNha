@@ -34,9 +34,8 @@ class ChiTietNgayLamController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ChiTietNgayLam $chiTietNgayLam)
+    public function show($id)
     {
-        //
     }
 
     /**
@@ -61,5 +60,16 @@ class ChiTietNgayLamController extends Controller
     public function destroy(ChiTietNgayLam $chiTietNgayLam)
     {
         //
+    }
+
+    public function layChiTietNgayLamByIdPhieuDichVu($id)
+    {
+        return ChiTietNgayLam::select('chitietngaylam.*', 'nhanvien.idNhanVien', 'users.name', 'users.Anh')
+            ->leftJoin('phieudichvu', 'phieudichvu.idPhieuDichVu', '=', 'chitietngaylam.idPhieuDichVu')
+            ->leftJoin('chitietnhanvienlamdichvu', 'chitietngaylam.idChiTietNgayLam', '=', 'chitietnhanvienlamdichvu.idChiTietNgayLam')
+            ->leftJoin('nhanvien', 'chitietnhanvienlamdichvu.idNhanVien', '=', 'nhanvien.idNhanVien')
+            ->leftJoin('users', 'nhanvien.idNguoiDung', '=', 'users.id')
+            ->where('phieudichvu.idPhieuDichVu', $id)
+            ->get();
     }
 }
