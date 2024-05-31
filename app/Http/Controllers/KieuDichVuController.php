@@ -67,7 +67,7 @@ class KieuDichVuController extends Controller
     {
         return KieuDichVu::select('kieudichvu.*')
             ->join('chitietdichvu', 'chitietdichvu.idKieuDichVu', '=', 'kieudichvu.idKieuDichVu')
-            ->where('chitietdichvu.idDichVu', '=', 2)
+            ->where('chitietdichvu.idDichVu', '=', $id)
             ->distinct()
             ->get();
     }
