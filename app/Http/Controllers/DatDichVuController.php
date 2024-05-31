@@ -22,7 +22,6 @@ class DatDichVuController extends Controller
      */
     public function create(Request $request)
     {
-
     }
 
     /**
@@ -46,34 +45,43 @@ class DatDichVuController extends Controller
             "idChiTietDichVu" => $request->idChiTietDichVu
         ]);
 
-        $thu = explode(' - ', $request->Thu); // giả sử Thu có các giá trị như "Thứ 2 - Thứ 4 - Thứ 6"
-        $thuMap = [
-            'Chủ Nhật' => 0,
-            'Thứ 2' => 1,
-            'Thứ 3' => 2,
-            'Thứ 4' => 3,
-            'Thứ 5' => 4,
-            'Thứ 6' => 5,
-            'Thứ 7' => 6,
-        ];
-
-        $thuSo = array_map(function ($day) use ($thuMap) {
-            return $thuMap[$day];
-        }, $thu);
-
         $ngayHienTai = Carbon::createFromFormat('Y-m-d', $request->NgayBatDau);
-        $soBuoiDaTao = 0;
 
-        while ($soBuoiDaTao < $request->SoBuoi) {
-            if (in_array($ngayHienTai->dayOfWeek, $thuSo)) {
-                ChiTietNgayLam::create([
-                    "idPhieuDichVu" => $datDV->idPhieuDichVu,
-                    "TinhTrangDichVu" => 1,
-                    "NgayLam" => $ngayHienTai->format('Y-m-d')
-                ]);
-                $soBuoiDaTao++;
+        if ($request->Thu != null) {
+            $thu = explode(' - ', $request->Thu); // giả sử Thu có các giá trị như "Thứ 2 - Thứ 4 - Thứ 6"
+            $thuMap = [
+                'Chủ Nhật' => 0,
+                'Thứ 2' => 1,
+                'Thứ 3' => 2,
+                'Thứ 4' => 3,
+                'Thứ 5' => 4,
+                'Thứ 6' => 5,
+                'Thứ 7' => 6,
+            ];
+
+            $thuSo = array_map(function ($day) use ($thuMap) {
+                return $thuMap[$day];
+            }, $thu);
+
+            $soBuoiDaTao = 0;
+
+            while ($soBuoiDaTao < $request->SoBuoi) {
+                if (in_array($ngayHienTai->dayOfWeek, $thuSo)) {
+                    ChiTietNgayLam::create([
+                        "idPhieuDichVu" => $datDV->idPhieuDichVu,
+                        "TinhTrangDichVu" => 1,
+                        "NgayLam" => $ngayHienTai->format('Y-m-d')
+                    ]);
+                    $soBuoiDaTao++;
+                }
+                $ngayHienTai->addDay();
             }
-            $ngayHienTai->addDay();
+        } else {
+            ChiTietNgayLam::create([
+                "idPhieuDichVu" => $datDV->idPhieuDichVu,
+                "TinhTrangDichVu" => 1,
+                "NgayLam" => $ngayHienTai->format('Y-m-d')
+            ]);
         }
 
         return response()->json([
@@ -89,10 +97,10 @@ class DatDichVuController extends Controller
     {
         // return $id;
         return DatDichVu::select('phieudichvu.*', 'dichvu.tenDichVu', 'chitietdichvu.BuoiDangKyDichVu')
-        ->leftJoin('chitietdichvu', 'phieudichvu.idChiTietDichVu', '=', 'chitietdichvu.idChiTietDichVu')
-        ->leftJoin('dichvu', 'chitietdichvu.idDichVu', '=', 'dichvu.idDichVu')
-        ->where('phieudichvu.idPhieuDichVu', $id)
-        ->get();
+            ->leftJoin('chitietdichvu', 'phieudichvu.idChiTietDichVu', '=', 'chitietdichvu.idChiTietDichVu')
+            ->leftJoin('dichvu', 'chitietdichvu.idDichVu', '=', 'dichvu.idDichVu')
+            ->where('phieudichvu.idPhieuDichVu', $id)
+            ->get();
     }
 
     /**
@@ -120,12 +128,13 @@ class DatDichVuController extends Controller
         //
     }
 
-    public function layPhieuDichVuTheoIdKhachHang($id){
+    public function layPhieuDichVuTheoIdKhachHang($id)
+    {
         return DatDichVu::select('phieudichvu.*', 'dichvu.tenDichVu')
-        ->leftJoin('chitietdichvu', 'phieudichvu.idChiTietDichVu', '=', 'chitietdichvu.idChiTietDichVu')
-        ->leftJoin('dichvu', 'chitietdichvu.idDichVu', '=', 'dichvu.idDichVu')
-        ->where('phieudichvu.idKhachHang', $id)
-        ->orderBy('phieudichvu.idPhieuDichVu', 'desc')
-        ->get();
+            ->leftJoin('chitietdichvu', 'phieudichvu.idChiTietDichVu', '=', 'chitietdichvu.idChiTietDichVu')
+            ->leftJoin('dichvu', 'chitietdichvu.idDichVu', '=', 'dichvu.idDichVu')
+            ->where('phieudichvu.idKhachHang', $id)
+            ->orderBy('phieudichvu.idPhieuDichVu', 'desc')
+            ->get();
     }
 }
