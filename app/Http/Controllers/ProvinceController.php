@@ -13,7 +13,7 @@ class ProvinceController extends Controller
     public function index()
     {
         //
-        return province::all();
+        return province::orderBy('province_name', 'asc')->get();
     }
 
     /**

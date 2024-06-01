@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('GhiChu')->nullable();
             $table->integer('TinhTrang')->nullable(); //Đơn dịch vụ được duyệt chưa
             $table->integer('TinhTrangThanhToan')->nullable();
+            $table->timestamp('NgayDat')->useCurrent();
             $table->foreignId('idDiaChi')->nullable()->references('idDiaChi')->on('DiaChi');
             $table->foreignId('idKhachHang')->nullable()->references('idKhachHang')->on('KhachHang');
             $table->foreignId('idChiTietDichVu')->nullable()->references('idChiTietDichVu')->on('ChiTietDichVu');

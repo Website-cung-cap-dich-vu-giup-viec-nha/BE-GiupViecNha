@@ -65,6 +65,6 @@ class DistrictController extends Controller
 
     public function layHuyenByProvinceId($id)
     {
-        return District::where("province_id", $id)->get();
+        return District::where("province_id", $id)->orderBy('district_name', 'asc')->get();
     }
 }
