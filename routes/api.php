@@ -14,6 +14,7 @@ use App\Http\Controllers\NhanVienController;
 use App\Http\Controllers\PhongBanController;
 use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\ThanhToanController;
+use App\Http\Controllers\ThongKeController;
 use App\Http\Controllers\WardController;
 use App\Models\DatDichVu;
 use Illuminate\Http\Request;
@@ -65,3 +66,4 @@ Route::get('layChiTietNLTheoIdPDV/{id}', [ChiTietNgayLamController::class,'layCh
 
 Route::post('thanhtoanvnpay', [ThanhToanController::class,'thanhToanVnPay']);
 Route::get('xacnhanthanhtoan', [ThanhToanController::class,'xacNhanThanhToan']);
+Route::resource('thongke', ThongKeController::class);
