@@ -40,9 +40,13 @@ Route::group([
 Route::group([
     "middleware" => ["auth:api"]
 ], function(){
+    Route::post('DiaChi/insertAddress', [DiaChiController::class, 'insertAddress']);
     Route::get('ChucVu/getPositionByDepartment/{idPhongBan}', [ChucVuController::class, 'getPositionByDepartment']);
     Route::post('NhanVien/importData', [NhanVienController::class, 'importData']);
     Route::get('NhanVien/exportImportHeaderData', [NhanVienController::class, 'exportImportHeaderData']);
+    Route::apiResource('PhieuDichVu', DatDichVuController::class);
+    Route::apiResource('DichVu', DichVuController::class);
+    Route::apiResource('KhachHang', KhachHangController::class);
     Route::apiResource('NhanVien', NhanVienController::class);
     Route::apiResource('ChucVu', ChucVuController::class);
     Route::apiResource('PhongBan', PhongBanController::class);

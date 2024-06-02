@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ChucVu;
 use App\Models\NhanVien;
+use App\Models\PhongBan;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -99,6 +100,8 @@ class NhanVienController extends Controller
         $user = User::create($userData);
         $NhanVienData = $request->only(["idChucVu", "idPhongBan"]);
         $NhanVienData["idNguoiDung"] = $user->id;
+        $NgaySinh = Carbon::parse($request->NgaySinh)->toDateString();
+        $userData['NgaySinh'] = $NgaySinh;
         NhanVien::create($NhanVienData);
         return response()->json(['message' => ['Thêm nhân viên thành công']], 200);
     }
@@ -136,7 +139,7 @@ class NhanVienController extends Controller
                 'phone_number',
                 Rule::unique('users', 'SDT')->ignore($request->idNguoiDung)
             ],
-            'password' => 'required|confirmed',
+            // 'password' => 'required|confirmed',
             'GioiTinh' => 'required|string',
             'idPhongBan' => 'required|exists:PhongBan,idPhongBan',
             'idChucVu' => 'required|exists:ChucVu,idChucVu',
@@ -146,6 +149,10 @@ class NhanVienController extends Controller
         $dataUser = User::findOrFail($dataNhanVien->idNguoiDung);
         $userData = $request->except(["idChucVu", "idPhongBan", "password_confirmation"]);
         $NhanVienData = $request->only(["idNguoiDung", "SoSao", "idChucVu", "idPhongBan"]);
+        $PhongBan = PhongBan::findOrFail($NhanVienData["idChucVu"]);
+        if($PhongBan->idPhongBan != $NhanVienData["idPhongBan"]){
+            return response()->json(['message' => ['Vui lòng chọn chức vụ']], 422);
+        }
         $dataNhanVien->update($NhanVienData);
         $NgaySinh = Carbon::parse($request->NgaySinh)->toDateString();
         $userData['NgaySinh'] = $NgaySinh;

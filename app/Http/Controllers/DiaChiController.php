@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DiaChi;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DiaChiController extends Controller
@@ -109,5 +110,19 @@ class DiaChiController extends Controller
             ->where('diachi.idNguoiDung', $id)
             ->where('diachi.HienThi', 1)
             ->get();
+    }
+    public function insertAddress(Request $request)
+    {
+        $idNguoiDung = User::findOrFail($request->idKhachHang);
+        DiaChi::create([
+            "Duong" => $request->Duong,
+            "Phuong" => $request->Phuong,
+            "idNguoiDung" => $idNguoiDung,
+        ]);
+
+        return response()->json([
+            "status" => true,
+            "message" => "Thêm địa chỉ thành công"
+        ]);
     }
 }
