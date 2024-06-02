@@ -15,7 +15,7 @@ class ThongKeController extends Controller
             ->leftJoin('phieudichvu as pd', function ($join) use ($request) {
                 $join->on('ct.idChiTietDichVu', '=', 'pd.idChiTietDichVu')
                     ->whereBetween(DB::raw("DATE_FORMAT(pd.NgayDat, '%Y-%m-%d')"), [$request->NgayBD, $request->NgayKT])
-                    ->where('pd.TinhTrangThanhToan', 1);
+                    ->where('pd.TinhTrangThanhToan', 2);
             })
             ->select('dv.tenDichVu as TenDichVu', DB::raw('COALESCE(SUM(pd.Tongtien), 0) as DoanhThu'))
             ->groupBy('dv.tenDichVu')
