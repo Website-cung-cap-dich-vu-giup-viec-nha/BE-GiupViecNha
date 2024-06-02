@@ -12,9 +12,71 @@ class DatDichVuController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $startDate = $request->query('startDate');
+        $endDate = $request->query('endDate');
+        $idPhieuDichVu = $request->query('idPhieuDichVu');
+        $TinhTrang = $request->query('TinhTrang');
+        $TinhTrangThanhToan = $request->query('TinhTrangThanhToan');
+        $idDichVu = $request->query('idDichVu');
+        $start = $request->query('start', null);
+        $take = $request->query('take', null);
+
+        $query = DatDichVu::leftJoin('KhachHang', 'KhachHang.idKhachHang', '=', 'PhieuDichVu.idKhachHang')
+            ->leftJoin('users', 'users.id', '=', 'KhachHang.idNguoiDung')
+            ->leftJoin('DiaChi', 'DiaChi.idDiaChi', '=', 'PhieuDichVu.idDiaChi')
+            ->leftJoin('ChiTietDichVu', 'ChiTietDichVu.idChiTietDichVu', '=', 'PhieuDichVu.idChiTietDichVu')
+            ->leftJoin('DichVu', 'DichVu.idDichVu', '=', 'ChiTietDichVu.idDichVu')
+            ->leftJoin('Ward', 'Ward.ward_id', '=', 'DiaChi.Phuong')
+            ->leftJoin('District', 'District.district_id', '=', 'Ward.district_id')
+            ->leftJoin('Province', 'Province.province_id', '=', 'District.province_id');
+
+        if (!empty($startDate)) {
+            // Chuyển đổi định dạng ngày nếu cần thiết
+            $startDate = date('Y-m-d', strtotime($startDate));
+            $query->where('NgayBatDau', '>=', $startDate);
+        }
+
+        if (!empty($endDate)) {
+            // Chuyển đổi định dạng ngày nếu cần thiết
+            $endDate = date('Y-m-d', strtotime($endDate));
+            $query->where('NgayBatDau', '<=', $endDate);
+        }
+
+        if (!empty($idPhieuDichVu)) {
+            $query->where('idPhieuDichVu', '=', $idPhieuDichVu);
+        }
+
+        if (!empty($TinhTrang) && $TinhTrang != "-1") {
+            $query->where('TinhTrang', '=', $TinhTrang);
+        }
+
+        if (!empty($TinhTrangThanhToan) && $TinhTrangThanhToan != "-1") {
+            $query->where('TinhTrangThanhToan', '=', $TinhTrangThanhToan);
+        }
+
+        if (!empty($idDichVu) && $idDichVu != "-1") {
+            $query->where('DichVu.idDichVu', '=', $idDichVu);
+        }
+
+        $PhieuDichVu = null;
+        if ($start == null || $take == null) {
+            $PhieuDichVu = $query->orderBy('NgayBatDau', 'asc')->select('PhieuDichVu.*', 'KhachHang.*', 'DiaChi.*', 'DichVu.*')->get();
+        } else {
+            $PhieuDichVu = $query->skip($start)
+                ->select('PhieuDichVu.*', 'ChiTietDichVu.*', 'users.*', 'KhachHang.*', 'DiaChi.*', 'DichVu.*', 'Province.province_name', 'District.district_name', 'Ward.ward_name')
+                ->take($take)
+                ->orderBy('NgayBatDau', 'asc')
+                ->get();
+        }
+
+        $total = $query->count();
+
+        return response()->json([
+            'total' => $total,
+            'data' => $PhieuDichVu,
+        ]);
     }
 
     /**
@@ -123,9 +185,12 @@ class DatDichVuController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DatDichVu $datDichVu)
+    public function destroy($id)
     {
-        //
+        $PhieuDichVu = DatDichVu::findOrFail($id);
+        $PhieuDichVu->TinhTrang = 3;
+        $PhieuDichVu->save();
+        return response()->json(['message' => ['Hủy phiếu dịch vụ thành công']], 200);
     }
 
     public function layPhieuDichVuTheoIdKhachHang($id)

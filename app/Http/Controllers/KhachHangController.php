@@ -12,7 +12,10 @@ class KhachHangController extends Controller
      */
     public function index()
     {
-        //
+        $KhachHang = KhachHang::leftJoin('users', 'users.id', '=', 'KhachHang.idNguoiDung')->select('KhachHang.*', 'users.*')->get();
+        return response()->json([
+            'data' => $KhachHang,
+        ]);
     }
 
     /**
@@ -63,7 +66,8 @@ class KhachHangController extends Controller
         //
     }
 
-    public function layIdKhachHang($id){
+    public function layIdKhachHang($id)
+    {
         return KhachHang::where("idNguoiDung", $id)->pluck("idKhachHang");
     }
 }
