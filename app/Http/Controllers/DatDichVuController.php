@@ -91,6 +91,18 @@ class DatDichVuController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            "Tongtien" => 'required',
+            "NgayBatDau" => 'required',
+            "SoBuoi" => 'required',
+            // "SoGio"  => '',
+            // "SoNguoiDuocChamSoc" => 'required',
+            "GioBatDau" => 'required',
+            // "GhiChu" => 'required',
+            "idChiTietDichVu" => 'required|exists:ChiTietDichVu,idChiTietDichVu',
+            "idKhachHang" => 'required|exists:KhachHang,idKhachHang',
+            "idDiaChi" => 'required|exists:DiaChi,idDiaChi',
+        ]);
         // User model to save user in database
         $datDV = DatDichVu::create([
             "Tongtien" => $request->Tongtien,
