@@ -95,6 +95,24 @@ class NhanVienController extends Controller
             'idPhongBan' => 'required|exists:PhongBan,idPhongBan',
             'idChucVu' => 'required|exists:ChucVu,idChucVu',
             'NgaySinh' => 'required',
+        ], [
+            'name.required' => 'Tên bắt buộc',
+            'name.string' => 'Tên phải là chuỗi ký tự',
+            'email.required' => 'Email bắt buộc',
+            'email.unique' => 'Email đã tồn tại',
+            'email.email' => 'Email không hợp lệ',
+            'SDT.required' => 'Số điện thoại bắt buộc',
+            'SDT.phone_number' => 'Số điện thoại không hợp lệ',
+            'SDT.unique' => 'Số điện thoại đã tồn tại',
+            'password.required' => 'Mật khẩu bắt buộc',
+            'password.confirmed' => 'Xác nhận mật khẩu không khớp',
+            'GioiTinh.required' => 'Giới tính bắt buộc',
+            'GioiTinh.string' => 'Giới tính phải là chuỗi ký tự',
+            'idPhongBan.required' => 'Phòng ban bắt buộc',
+            'idPhongBan.exists' => 'Phòng ban không tồn tại',
+            'idChucVu.required' => 'Chức vụ bắt buộc',
+            'idChucVu.exists' => 'Chức vụ không tồn tại',
+            'NgaySinh.required' => 'Ngày sinh bắt buộc',
         ]);
         $userData = $request->except(["idChucVu", "idPhongBan", "password_confirmation"]);
         $user = User::create($userData);
@@ -150,7 +168,7 @@ class NhanVienController extends Controller
         $userData = $request->except(["idChucVu", "idPhongBan", "password_confirmation"]);
         $NhanVienData = $request->only(["idNguoiDung", "SoSao", "idChucVu", "idPhongBan"]);
         $PhongBan = PhongBan::findOrFail($NhanVienData["idChucVu"]);
-        if($PhongBan->idPhongBan != $NhanVienData["idPhongBan"]){
+        if ($PhongBan->idPhongBan != $NhanVienData["idPhongBan"]) {
             return response()->json(['message' => ['Vui lòng chọn chức vụ']], 422);
         }
         $dataNhanVien->update($NhanVienData);
