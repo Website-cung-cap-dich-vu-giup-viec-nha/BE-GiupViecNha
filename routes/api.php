@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChiTietDatDichVuController;
 use App\Http\Controllers\ChiTietDichVuController;
 use App\Http\Controllers\ChiTietNgayLamController;
 use App\Http\Controllers\ChucVuController;
@@ -40,10 +41,14 @@ Route::group([
 Route::group([
     "middleware" => ["auth:api"]
 ], function(){
+    Route::get('ChiTietNhanVienLamDichVu/getDataByIdChiTietNgayLam/{idChiTietNgayLam}', [ChiTietDatDichVuController::class, 'getDataByIdChiTietNgayLam']);
+    Route::get('NhanVien/getStaffIsNotAddChiTietNgayLam', [NhanVienController::class, 'getStaffIsNotAddChiTietNgayLam']);
+    Route::get('ChiTietNgayLam/getDataByIdPhieuDichVu/{idPhieuDichVu}', [ChiTietNgayLamController::class, 'getDataByIdPhieuDichVu']);
     Route::post('DiaChi/insertAddress', [DiaChiController::class, 'insertAddress']);
     Route::get('ChucVu/getPositionByDepartment/{idPhongBan}', [ChucVuController::class, 'getPositionByDepartment']);
     Route::post('NhanVien/importData', [NhanVienController::class, 'importData']);
     Route::get('NhanVien/exportImportHeaderData', [NhanVienController::class, 'exportImportHeaderData']);
+    Route::apiResource('ChiTietNhanVienLamDichVu', ChiTietDatDichVuController::class);
     Route::apiResource('PhieuDichVu', DatDichVuController::class);
     Route::apiResource('DichVu', DichVuController::class);
     Route::apiResource('KhachHang', KhachHangController::class);

@@ -9,6 +9,7 @@ class ChiTietDatDichVu extends Model
 {
     use HasFactory;
     protected $table = "chitietnhanvienlamdichvu";
+    public $timestamps = false;
     protected $fillable = [
         'idChiTietNhanVienLamDichVu',
         'idChiTietNgayLam',

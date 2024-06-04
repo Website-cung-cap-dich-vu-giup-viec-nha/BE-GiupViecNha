@@ -28,7 +28,25 @@ class ChiTietDatDichVuController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // return response()->json(['message' => $request], 422);
+        $request->validate([
+            'idChiTietNgayLam' => 'required|exists:ChiTietNgayLam,idChiTietNgayLam',
+            'idNhanVien' => 'required|exists:NhanVien,idNhanVien',
+        ], [
+            'idChiTietNgayLam.required' => 'Ngày làm bắt buộc',
+            'idChiTietNgayLam.exists' => 'Ngày làm không tồn tại',
+            'idNhanVien.required' => 'Nhân viên bắt buộc',
+            'idNhanVien.exists' => 'Nhân viên không tồn tại',
+        ]);
+        $checking = ChiTietDatDichVu::where('idChiTietNgayLam', '=', $request["idChiTietNgayLam"])
+            ->where('idNhanVien', '=', $request["idNhanVien"])
+            ->get();
+        if (sizeof($checking) > 0) {
+            return response()->json(['message' => ['Nhân viên này đã đươc thêm vào ngày làm này']], 422);
+        }
+        $data = $request->only(["idChiTietNgayLam", "idNhanVien"]);
+        ChiTietDatDichVu::create($data);
+        return response()->json(['message' => ['Thêm nhân viên thực hiện dịch vụ thành công']], 200);
     }
 
     /**
@@ -61,5 +79,13 @@ class ChiTietDatDichVuController extends Controller
     public function destroy(ChiTietDatDichVu $chiTietDatDichVu)
     {
         //
+    }
+    public function getDataByIdChiTietNgayLam($idChiTietNgayLam)
+    {
+        $ChiTietNhanVienLamDichVu = ChiTietDatDichVu::leftjoin('NhanVien', 'NhanVien.idNhanVien', '=', 'ChiTietNhanVienLamDichVu.idNhanVien')
+                                                    ->leftJoin('users', 'users.id', '=', 'NhanVien.idNguoiDung')
+                                                    ->where('idChiTietNgayLam', '=', $idChiTietNgayLam)
+                                                    ->select('ChiTietNhanVienLamDichVu.*', 'NhanVien.*', 'users.*')->get();
+        return response()->json(['data' => $ChiTietNhanVienLamDichVu], 200);
     }
 }

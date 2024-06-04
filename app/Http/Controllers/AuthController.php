@@ -102,7 +102,8 @@ class AuthController extends Controller
                 "user" => $userData,
                 "position" => $position,
                 "user_id" => request()->user()->id,
-                "SDT" => request()->user()->SDT
+                "SDT" => request()->user()->SDT,
+                "staff" => $staffData
             ]);
         } else {
             return response()->json([

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->double('GiaTien')->nullable();
             $table->string('BuoiDangKyDichVu')->nullable();
             $table->string('tenChiTietDichVu')->nullable();
+            $table->integer('soNhanVien')->nullable();
             $table->foreignId('idDichVu')->nullable()->references('idDichVu')->on('DichVu');
             $table->foreignId('idKieuDichVu')->nullable()->references('idKieuDichVu')->on('KieuDichVu');
         });
