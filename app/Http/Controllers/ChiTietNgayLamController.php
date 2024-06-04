@@ -72,4 +72,16 @@ class ChiTietNgayLamController extends Controller
             ->where('phieudichvu.idPhieuDichVu', $id)
             ->get();
     }
+    public function getDataByIdPhieuDichVu($idPhieuDichVu)
+    {
+        $query = ChiTietNgayLam::leftjoin('PhieuDichVu', 'PhieuDichVu.idPhieuDichVu', '=', 'ChiTietNgayLam.idPhieuDichVu')
+            ->leftJoin('ChiTietDichVu', 'ChiTietDichVu.idChiTietDichVu', '=', 'PhieuDichVu.idChiTietDichVu')
+            ->where('ChiTietNgayLam.idPhieuDichVu', '=', $idPhieuDichVu);
+        $ChiTietNgayLam = $query->select('ChiTietNgayLam.*', 'ChiTietDichVu.*')->get();
+        $total = $query->count();
+        return response()->json([
+            'total' => $total,
+            'data' => $ChiTietNgayLam,
+        ]);
+    }
 }

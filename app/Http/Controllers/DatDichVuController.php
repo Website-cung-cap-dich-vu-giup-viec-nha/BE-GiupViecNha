@@ -102,6 +102,7 @@ class DatDichVuController extends Controller
             "idChiTietDichVu" => 'required|exists:ChiTietDichVu,idChiTietDichVu',
             "idKhachHang" => 'required|exists:KhachHang,idKhachHang',
             "idDiaChi" => 'required|exists:DiaChi,idDiaChi',
+            "idNhanVienQuanLyDichVu" => "required|exists:NhanVien,idNhanVien"
         ]);
         // User model to save user in database
         $datDV = DatDichVu::create([
@@ -116,7 +117,8 @@ class DatDichVuController extends Controller
             "TinhTrangThanhToan" => 1,
             "idDiaChi" => $request->idDiaChi,
             "idKhachHang" => $request->idKhachHang,
-            "idChiTietDichVu" => $request->idChiTietDichVu
+            "idChiTietDichVu" => $request->idChiTietDichVu,
+            "idNhanVienQuanLyDichVu" => $request->idNhanVienQuanLyDichVu,
         ]);
 
         $ngayHienTai = Carbon::createFromFormat('Y-m-d', $request->NgayBatDau);
