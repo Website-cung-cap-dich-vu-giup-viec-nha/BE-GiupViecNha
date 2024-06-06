@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChiTietDatDichVu;
+use App\Models\ChiTietNgayLam;
+use App\Models\DatDichVu;
+use App\Models\NhanVien;
 use Illuminate\Http\Request;
 
 class ChiTietDatDichVuController extends Controller
@@ -46,6 +49,14 @@ class ChiTietDatDichVuController extends Controller
         }
         $data = $request->only(["idChiTietNgayLam", "idNhanVien"]);
         ChiTietDatDichVu::create($data);
+
+        $userData = request()->user();
+        $staffData = NhanVien::where('idNguoiDung', $userData->id)->first();
+        $ChiTietNgayLam = ChiTietNgayLam::findOrFail($request["idChiTietNgayLam"]);
+        $DatDichVu = DatDichVu::findOrFail($ChiTietNgayLam->idPhieuDichVu);
+        $DatDichVu->idNhanVienQuanLyDichVu = $staffData->idNhanVien;
+        $DatDichVu->save();
+
         return response()->json(['message' => ['Thêm nhân viên thực hiện dịch vụ thành công']], 200);
     }
 
@@ -76,9 +87,20 @@ class ChiTietDatDichVuController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ChiTietDatDichVu $chiTietDatDichVu)
+    public function destroy($idChiTietNhanVienLamDichVu)
     {
-        //
+        $ChiTietNhanVienLamDichVu = ChiTietDatDichVu::findOrFail($idChiTietNhanVienLamDichVu);
+
+        $userData = request()->user();
+        $staffData = NhanVien::where('idNguoiDung', $userData->id)->first();
+        $ChiTietNgayLam = ChiTietNgayLam::findOrFail($ChiTietNhanVienLamDichVu->idChiTietNgayLam);
+        $DatDichVu = DatDichVu::findOrFail($ChiTietNgayLam->idPhieuDichVu);
+        $DatDichVu->idNhanVienQuanLyDichVu = $staffData->idNhanVien;
+        $DatDichVu->save();
+
+        $ChiTietNhanVienLamDichVu->delete();
+
+        return response()->json(['message' => 'Xoá nhân viên thực hiện dịch vụ thành công'], 200);
     }
     public function getDataByIdChiTietNgayLam($idChiTietNgayLam)
     {

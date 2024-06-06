@@ -313,11 +313,23 @@ class NhanVienController extends Controller
 
         return response()->json(['message' => ['Thêm dữ liệu vào hệ thống thành công']], 200);
     }
-    public function getStaffIsNotAddChiTietNgayLam()
+    public function getStaffIsNotAddChiTietNgayLam(Request $request)
     {
+        $idChiTietNgayLam = $request->query('idChiTietNgayLam');
+
         $NhanVien = NhanVien::leftJoin('users', 'users.id', '=', 'NhanVien.idNguoiDung')
             ->leftJoin('ChiTietNhanVienLamDichVu', 'ChiTietNhanVienLamDichVu.idNhanVien', '=', 'NhanVien.idNhanVien')
-            ->select('NhanVien.*', 'users.*')->get();
+            ->select('NhanVien.*', 'users.*');
+
+        if ($idChiTietNgayLam !== null && $idChiTietNgayLam !== '') {
+            $NhanVien->whereNotIn('NhanVien.idNhanVien', function ($query) use ($idChiTietNgayLam) {
+                $query->select('idNhanVien')
+                    ->from('ChiTietNhanVienLamDichVu')
+                    ->where('idChiTietNgayLam', $idChiTietNgayLam);
+            });
+        }
+
+        $NhanVien = $NhanVien->get();
         return response()->json([
             'data' => $NhanVien,
         ]);
