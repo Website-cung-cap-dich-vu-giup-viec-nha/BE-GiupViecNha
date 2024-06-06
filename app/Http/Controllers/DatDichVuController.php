@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ChiTietNgayLam;
 use App\Models\DatDichVu;
+use App\Models\NhanVien;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -204,6 +205,13 @@ class DatDichVuController extends Controller
         $PhieuDichVu = DatDichVu::findOrFail($id);
         $PhieuDichVu->TinhTrang = 3;
         $PhieuDichVu->save();
+
+        $userData = request()->user();
+        $staffData = NhanVien::where('idNguoiDung', $userData->id)->first();
+        $DatDichVu = DatDichVu::findOrFail($PhieuDichVu->idPhieuDichVu);
+        $DatDichVu->idNhanVienQuanLyDichVu = $staffData->idNhanVien;
+        $DatDichVu->save();
+
         return response()->json(['message' => ['Hủy phiếu dịch vụ thành công']], 200);
     }
 
@@ -215,5 +223,15 @@ class DatDichVuController extends Controller
             ->where('phieudichvu.idKhachHang', $id)
             ->orderBy('phieudichvu.idPhieuDichVu', 'desc')
             ->get();
+    }
+    public function updateTinhTrang($idPhieuDichVu, $TinhTrang)
+    {
+        $userData = request()->user();
+        $staffData = NhanVien::where('idNguoiDung', $userData->id)->first();
+        $DatDichVu = DatDichVu::findOrFail($idPhieuDichVu);
+        $DatDichVu->TinhTrang = $TinhTrang;
+        $DatDichVu->idNhanVienQuanLyDichVu = $staffData->idNhanVien;
+        $DatDichVu->save();
+        return response()->json(['message' => ['Cập nhật trạng thái thành công']], 200);
     }
 }

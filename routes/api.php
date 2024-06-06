@@ -41,6 +41,7 @@ Route::group([
 Route::group([
     "middleware" => ["auth:api"]
 ], function(){
+    Route::put('PhieuDichVu/updateTinhTrang/{idPhieuDichVu}/{TinhTrang}', [DatDichVuController::class, 'updateTinhTrang']);
     Route::get('ChiTietNhanVienLamDichVu/getDataByIdChiTietNgayLam/{idChiTietNgayLam}', [ChiTietDatDichVuController::class, 'getDataByIdChiTietNgayLam']);
     Route::get('NhanVien/getStaffIsNotAddChiTietNgayLam', [NhanVienController::class, 'getStaffIsNotAddChiTietNgayLam']);
     Route::get('ChiTietNgayLam/getDataByIdPhieuDichVu/{idPhieuDichVu}', [ChiTietNgayLamController::class, 'getDataByIdPhieuDichVu']);

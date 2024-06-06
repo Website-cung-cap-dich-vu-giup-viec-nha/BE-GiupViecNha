@@ -9,6 +9,7 @@ class ChiTietNgayLam extends Model
 {
     use HasFactory;
     protected $table = "ChiTietNgayLam";
+    protected $primaryKey = 'idChiTietNgayLam';
     protected $fillable = [
         "idChiTietNgayLam",
         "NgayLam",
