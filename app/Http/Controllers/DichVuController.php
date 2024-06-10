@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\DichVu;
+use Hamcrest\Text\IsEmptyString;
 use Illuminate\Http\Request;
+use PHPUnit\Framework\Constraint\IsEmpty;
 
 class DichVuController extends Controller
 {
@@ -61,5 +63,17 @@ class DichVuController extends Controller
     public function destroy(DichVu $dichVu)
     {
         //
+    }
+
+    public function search(Request $request)
+    {
+        $keyword = $request->search;
+        $query = DichVu::query();
+        if ($keyword) {
+            $query
+                ->where('tenDichVu', 'like', "%$keyword%")
+                ->orWhere('MoTa', 'like', "%$keyword%");
+        }
+        return $query->get();
     }
 }
