@@ -115,6 +115,7 @@ class NhanVienController extends Controller
             'NgaySinh.required' => 'Ngày sinh bắt buộc',
         ]);
         $userData = $request->except(["idChucVu", "idPhongBan", "password_confirmation"]);
+        $userData["NgaySinh"] = Carbon::parse($request->NgaySinh)->toDateString();
         $user = User::create($userData);
         $NhanVienData = $request->only(["idChucVu", "idPhongBan"]);
         $NhanVienData["idNguoiDung"] = $user->id;

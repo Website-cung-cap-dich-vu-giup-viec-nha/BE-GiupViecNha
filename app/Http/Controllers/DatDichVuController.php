@@ -61,6 +61,8 @@ class DatDichVuController extends Controller
             $query->where('DichVu.idDichVu', '=', $idDichVu);
         }
 
+        $total = $query->count();
+
         $PhieuDichVu = null;
         if ($start == null || $take == null) {
             $PhieuDichVu = $query->orderBy('NgayBatDau', 'asc')->select('PhieuDichVu.*', 'KhachHang.*', 'DiaChi.*', 'DichVu.*')->get();
@@ -71,8 +73,6 @@ class DatDichVuController extends Controller
                 ->orderBy('NgayBatDau', 'asc')
                 ->get();
         }
-
-        $total = $query->count();
 
         return response()->json([
             'total' => $total,
