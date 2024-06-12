@@ -77,3 +77,4 @@ Route::get('layChiTietNLTheoIdPDV/{id}', [ChiTietNgayLamController::class,'layCh
 Route::post('thanhtoanvnpay', [ThanhToanController::class,'thanhToanVnPay']);
 Route::get('xacnhanthanhtoan', [ThanhToanController::class,'xacNhanThanhToan']);
 Route::resource('thongke', ThongKeController::class);
+Route::get('dichvu/search/{search}', [DichVuController::class, 'search']);
