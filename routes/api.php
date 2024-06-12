@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChiTietDatDichVuController;
 use App\Http\Controllers\ChiTietDichVuController;
 use App\Http\Controllers\ChiTietNgayLamController;
@@ -41,6 +42,7 @@ Route::group([
 Route::group([
     "middleware" => ["auth:api"]
 ], function(){
+    Route::get('Calendar/getCalendar/{startDate}/{endDate}', [CalendarController::class, 'getCalendar']);
     Route::put('PhieuDichVu/updateTinhTrang/{idPhieuDichVu}/{TinhTrang}', [DatDichVuController::class, 'updateTinhTrang']);
     Route::get('ChiTietNhanVienLamDichVu/getDataByIdChiTietNgayLam/{idChiTietNgayLam}', [ChiTietDatDichVuController::class, 'getDataByIdChiTietNgayLam']);
     Route::get('NhanVien/getStaffIsNotAddChiTietNgayLam', [NhanVienController::class, 'getStaffIsNotAddChiTietNgayLam']);

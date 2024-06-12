@@ -115,6 +115,8 @@ class NhanVienController extends Controller
             'NgaySinh.required' => 'Ngày sinh bắt buộc',
         ]);
         $userData = $request->except(["idChucVu", "idPhongBan", "password_confirmation"]);
+        $userData["NgaySinh"] = Carbon::parse($request->NgaySinh)->toDateString();
+        $userData["status"] = 1;
         $user = User::create($userData);
         $NhanVienData = $request->only(["idChucVu", "idPhongBan"]);
         $NhanVienData["idNguoiDung"] = $user->id;
@@ -174,6 +176,7 @@ class NhanVienController extends Controller
         $dataNhanVien->update($NhanVienData);
         $NgaySinh = Carbon::parse($request->NgaySinh)->toDateString();
         $userData['NgaySinh'] = $NgaySinh;
+        $userData['password'] = $dataUser->password;
         $dataUser->update($userData);
         return response()->json(['message' => ['Sửa thông tin nhân viên thành công']], 200);
     }
@@ -319,7 +322,7 @@ class NhanVienController extends Controller
 
         $NhanVien = NhanVien::leftJoin('users', 'users.id', '=', 'NhanVien.idNguoiDung')
             ->leftJoin('ChiTietNhanVienLamDichVu', 'ChiTietNhanVienLamDichVu.idNhanVien', '=', 'NhanVien.idNhanVien')
-            ->select('NhanVien.*', 'users.*');
+            ->select('NhanVien.idNhanVien', 'users.name', 'users.SDT');
 
         if ($idChiTietNgayLam !== null && $idChiTietNgayLam !== '') {
             $NhanVien->whereNotIn('NhanVien.idNhanVien', function ($query) use ($idChiTietNgayLam) {
@@ -329,7 +332,7 @@ class NhanVienController extends Controller
             });
         }
 
-        $NhanVien = $NhanVien->get();
+        $NhanVien = $NhanVien->groupBy('NhanVien.idNhanVien', 'users.name', 'users.SDT')->get();
         return response()->json([
             'data' => $NhanVien,
         ]);
