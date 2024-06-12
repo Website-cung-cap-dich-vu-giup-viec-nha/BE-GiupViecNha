@@ -36,12 +36,16 @@ class CalendarController extends Controller
                                         ->leftjoin('ward', 'ward.ward_id', '=', 'DiaChi.Phuong')
                                         ->leftjoin('district', 'district.district_id', '=', 'ward.district_id')
                                         ->leftjoin('province', 'province.province_id', '=', 'district.province_id')
+                                        ->leftjoin('ChiTietDichVu', 'ChiTietDichVu.idChiTietDichVu', '=', 'PhieuDichVu.idChiTietDichVu')
+                                        ->leftjoin('DichVu', 'DichVu.idDichVu', '=', 'ChiTietDichVu.idChiTietDichVu')
                                         ->whereIn('idChiTietNgayLam', $idChiTietNgayLam)
                                         ->whereIn('PhieuDichVu.idPhieuDichVu', $idPhieuDichVu)
                                         ->select('PhieuDichVu.idPhieuDichVu', 'PhieuDichVu.SoGio', 'PhieuDichVu.GioBatDau'
                                                 , 'PhieuDichVu.GhiChu', 'ChiTietNgayLam.TinhTrangDichVu'
                                                 , 'ChiTietNgayLam.NgayLam', 'users.name', 'users.SDT'
-                                                , 'DiaChi.Duong', 'ward.ward_name', 'district.district_name', 'province.province_name')
+                                                , 'DiaChi.Duong', 'ward.ward_name', 'district.district_name', 'province.province_name'
+                                                , 'DichVu.tenDichVu')
+                                        ->orderby('PhieuDichVu.GioBatDau')
                                         ->get();
 
         $transactionsByDayOfWeek = [];
