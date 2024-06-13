@@ -13,6 +13,7 @@ use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\KhachHangController;
 use App\Http\Controllers\KieuDichVuController;
 use App\Http\Controllers\NhanVienController;
+use App\Http\Controllers\PhanQuyenController;
 use App\Http\Controllers\PhongBanController;
 use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\ThanhToanController;
@@ -42,6 +43,8 @@ Route::group([
 Route::group([
     "middleware" => ["auth:api"]
 ], function(){
+    Route::get('NhanVien/isStaff', [NhanVienController::class, 'isStaff']);
+    Route::get('PhanQuyen/{idQuyen}/checkQuyen', [PhanQuyenController::class, 'checkQuyen']);
     Route::get('Calendar/getCalendar/{startDate}/{endDate}', [CalendarController::class, 'getCalendar']);
     Route::put('PhieuDichVu/updateTinhTrang/{idPhieuDichVu}/{TinhTrang}', [DatDichVuController::class, 'updateTinhTrang']);
     Route::get('ChiTietNhanVienLamDichVu/getDataByIdChiTietNgayLam/{idChiTietNgayLam}', [ChiTietDatDichVuController::class, 'getDataByIdChiTietNgayLam']);

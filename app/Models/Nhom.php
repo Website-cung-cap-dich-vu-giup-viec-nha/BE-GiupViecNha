@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Nhom extends Model
 {
     use HasFactory;
+    protected $table = "nhom";
+    protected $primaryKey = 'idNhom';
+    protected $fillable = [
+        "idNhom",
+        "tenNhom",
+    ];
+    public $timestamps = false;
 }
