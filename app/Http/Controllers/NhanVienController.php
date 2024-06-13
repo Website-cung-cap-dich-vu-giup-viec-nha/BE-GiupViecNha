@@ -337,4 +337,15 @@ class NhanVienController extends Controller
             'data' => $NhanVien,
         ]);
     }
+    public function isStaff()
+    {
+        $user = request()->user();
+        $staffData = NhanVien::where('idNguoiDung', $user->id)->first();
+        if ($staffData == null) {
+            return response()->json(['data' => false], 201);
+        }
+        else {
+            return response()->json(['data' => true], 200);
+        }
+    }
 }

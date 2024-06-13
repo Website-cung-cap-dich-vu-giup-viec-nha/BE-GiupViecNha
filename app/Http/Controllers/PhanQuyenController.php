@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NhanVien;
 use App\Models\PhanQuyen;
 use Illuminate\Http\Request;
 
@@ -61,5 +62,31 @@ class PhanQuyenController extends Controller
     public function destroy(PhanQuyen $phanQuyen)
     {
         //
+    }
+    public function checkQuyen($idQuyen)
+    {
+        // Kiểm tra xem người dùng có idQuyen tương ứng trong bảng PhanQuyen hay không
+        // $result = PhanQuyen::where('idNhom', function ($query) use ($idNguoiDung) {
+        //         $query->select('idNhom')
+        //             ->from('tbl_NhomNguoiDung')
+        //             ->where('idNguoiDung', $idNguoiDung);
+        //     })
+        //     ->where('idQuyen', $idQuyen)
+        //     ->exists();
+
+        $userData = request()->user();
+        $staffData = NhanVien::where('idNguoiDung', $userData->id)->first();
+
+        $result = PhanQuyen::whereIn('idNhom', function ($query) use ($staffData) {
+            $query->select('idNhom')
+                ->from('NhomNguoiDung')
+                ->where('idNhanVien', $staffData->idNhanVien);
+        })
+        ->where('idQuyen', $idQuyen)
+        ->exists();
+
+
+        // Trả về kết quả true hoặc false
+        return response()->json(['message' => $result], 200);
     }
 }
