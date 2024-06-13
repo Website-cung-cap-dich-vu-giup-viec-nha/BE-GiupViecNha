@@ -37,7 +37,7 @@ class CalendarController extends Controller
                                         ->leftjoin('district', 'district.district_id', '=', 'ward.district_id')
                                         ->leftjoin('province', 'province.province_id', '=', 'district.province_id')
                                         ->leftjoin('ChiTietDichVu', 'ChiTietDichVu.idChiTietDichVu', '=', 'PhieuDichVu.idChiTietDichVu')
-                                        ->leftjoin('DichVu', 'DichVu.idDichVu', '=', 'ChiTietDichVu.idChiTietDichVu')
+                                        ->leftjoin('DichVu', 'DichVu.idDichVu', '=', 'ChiTietDichVu.idDichVu')
                                         ->whereIn('idChiTietNgayLam', $idChiTietNgayLam)
                                         ->whereIn('PhieuDichVu.idPhieuDichVu', $idPhieuDichVu)
                                         ->select('PhieuDichVu.idPhieuDichVu', 'PhieuDichVu.SoGio', 'PhieuDichVu.GioBatDau'

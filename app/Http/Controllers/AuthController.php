@@ -23,7 +23,7 @@ class AuthController extends Controller
         $request->validate([
             "name" => "required|string",
             "SDT" => 'required|phone_number|unique:users,SDT',
-            "email" => 'required|email',
+            // "email" => 'email',
             "password" => "required|confirmed" // password_confirmation
         ]);
 
@@ -31,7 +31,7 @@ class AuthController extends Controller
        $user = User::create([
             "name" => $request->name,
             "SDT" => $request->SDT,
-            "email" => $request->email,
+            // "email" => $request->email,
             "password" => bcrypt($request->password)
         ]);
 
