@@ -13,7 +13,7 @@ class ProvinceController extends Controller
     public function index()
     {
         //
-        return province::orderBy('province_name', 'asc')->get();
+        return province::where('province_id', '=', 79)->get();
     }
 
     /**

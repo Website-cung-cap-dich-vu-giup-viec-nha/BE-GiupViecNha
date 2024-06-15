@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\ChiTietNgayLam;
 use App\Models\DatDichVu;
+use App\Models\DichVu;
 use App\Models\NhanVien;
+use App\Models\ThongBao;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -147,6 +149,20 @@ class DatDichVuController extends Controller
             ]);
         }
 
+        $dichVus = DichVu::distinct()
+            ->select('dichvu.*')
+            ->join('chitietdichvu', 'chitietdichvu.idDichVu', '=', 'dichvu.idDichVu')
+            ->join('phieudichvu', 'phieudichvu.idChiTietDichVu', '=', 'chitietdichvu.idChiTietDichVu')
+            ->where('phieudichvu.idPhieuDichVu', $datDV->idPhieuDichVu)
+            ->get();
+        $ngayBD = Carbon::createFromFormat('Y-m-d', $datDV->NgayBatDau)->format('d/m/Y');
+
+        ThongBao::create([
+            "TieuDe" => "Đặt dịch vụ thành công",
+            "NoiDung" => "Phiếu dịch vụ " . strtolower($dichVus[0]->tenDichVu) . " bắt đầu vào " . $ngayBD . " lúc " . substr($datDV->GioBatDau, 0, 5) . " của bạn đang được xử lý. Vui lòng kiểm tra lại sau là 30 phút.",
+            "idPhieuDichVu" => $datDV->idPhieuDichVu
+        ]);
+
         return response()->json([
             "status" => true,
             "message" => "Tạo phiếu dịch vụ thành công"
@@ -198,6 +214,20 @@ class DatDichVuController extends Controller
         $DatDichVu->idNhanVienQuanLyDichVu = $staffData->idNhanVien;
         $DatDichVu->save();
 
+        $dichVus = DichVu::distinct()
+            ->select('dichvu.*')
+            ->join('chitietdichvu', 'chitietdichvu.idDichVu', '=', 'dichvu.idDichVu')
+            ->join('phieudichvu', 'phieudichvu.idChiTietDichVu', '=', 'chitietdichvu.idChiTietDichVu')
+            ->where('phieudichvu.idPhieuDichVu', $DatDichVu->idPhieuDichVu)
+            ->get();
+        $ngayBD = Carbon::createFromFormat('Y-m-d', $DatDichVu->NgayBatDau)->format('d/m/Y');
+
+        ThongBao::create([
+            "TieuDe" => "Phiếu dịch vụ của bạn đã bị hủy",
+            "NoiDung" => "Phiếu dịch vụ " . strtolower($dichVus[0]->tenDichVu) . " bắt đầu vào " . $ngayBD . " lúc " . substr($DatDichVu->GioBatDau, 0, 5) . " của bạn đã bị hủy vì không có nhân viên phù hợp. Rất xin lỗi vì sự bất tiện này nếu bạn vẫn có nhu cầu bạn có thể đặt lại.",
+            "idPhieuDichVu" => $DatDichVu->idPhieuDichVu
+        ]);
+
         return response()->json(['message' => ['Hủy phiếu dịch vụ thành công']], 200);
     }
 
@@ -218,6 +248,21 @@ class DatDichVuController extends Controller
         $DatDichVu->TinhTrang = $TinhTrang;
         $DatDichVu->idNhanVienQuanLyDichVu = $staffData->idNhanVien;
         $DatDichVu->save();
+
+        $dichVus = DichVu::distinct()
+            ->select('dichvu.*')
+            ->join('chitietdichvu', 'chitietdichvu.idDichVu', '=', 'dichvu.idDichVu')
+            ->join('phieudichvu', 'phieudichvu.idChiTietDichVu', '=', 'chitietdichvu.idChiTietDichVu')
+            ->where('phieudichvu.idPhieuDichVu', $DatDichVu->idPhieuDichVu)
+            ->get();
+        $ngayBD = Carbon::createFromFormat('Y-m-d', $DatDichVu->NgayBatDau)->format('d/m/Y');
+
+        ThongBao::create([
+            "TieuDe" => "Phiếu dịch vụ của bạn đã được duyệt",
+            "NoiDung" => "Phiếu dịch vụ " . strtolower($dichVus[0]->tenDichVu) . " bắt đầu vào " . $ngayBD . " lúc " . substr($DatDichVu->GioBatDau, 0, 5) . " của bạn đã được duyệt. Bạn có thể thanh toán trước trên website.",
+            "idPhieuDichVu" => $DatDichVu->idPhieuDichVu
+        ]);
+
         return response()->json(['message' => ['Cập nhật trạng thái thành công']], 200);
     }
 }
