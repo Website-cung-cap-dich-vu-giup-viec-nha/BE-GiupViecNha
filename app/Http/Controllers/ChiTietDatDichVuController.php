@@ -45,7 +45,7 @@ class ChiTietDatDichVuController extends Controller
             ->where('idNhanVien', '=', $request["idNhanVien"])
             ->get();
         if (sizeof($checking) > 0) {
-            return response()->json(['message' => ['Nhân viên này đã đươc thêm vào ngày làm này']], 422);
+            return response()->json(['message' => ['Nhân viên này đã đươc thêm vào ngày làm này']], 201);
         }
         $data = $request->only(["idChiTietNgayLam", "idNhanVien"]);
         ChiTietDatDichVu::create($data);

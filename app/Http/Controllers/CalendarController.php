@@ -39,15 +39,31 @@ class CalendarController extends Controller
                                         ->leftjoin('ChiTietDichVu', 'ChiTietDichVu.idChiTietDichVu', '=', 'PhieuDichVu.idChiTietDichVu')
                                         ->leftjoin('DichVu', 'DichVu.idDichVu', '=', 'ChiTietDichVu.idDichVu')
                                         ->whereIn('idChiTietNgayLam', $idChiTietNgayLam)
-                                        ->whereIn('PhieuDichVu.idPhieuDichVu', $idPhieuDichVu)
-                                        ->select('PhieuDichVu.idPhieuDichVu', 'PhieuDichVu.SoGio', 'PhieuDichVu.GioBatDau'
-                                                , 'PhieuDichVu.GhiChu', 'ChiTietNgayLam.TinhTrangDichVu'
-                                                , 'ChiTietNgayLam.NgayLam', 'users.name', 'users.SDT'
-                                                , 'DiaChi.Duong', 'ward.ward_name', 'district.district_name', 'province.province_name'
-                                                , 'DichVu.tenDichVu')
-                                        ->orderby('PhieuDichVu.GioBatDau')
-                                        ->get();
-
+                                        ->whereIn('PhieuDichVu.idPhieuDichVu', $idPhieuDichVu);
+                                        // ->select('PhieuDichVu.idPhieuDichVu', 'PhieuDichVu.SoGio', 'PhieuDichVu.GioBatDau'
+                                        //         , 'PhieuDichVu.GhiChu', 'ChiTietNgayLam.TinhTrangDichVu'
+                                        //         , 'ChiTietNgayLam.NgayLam', 'users.name', 'users.SDT'
+                                        //         , 'DiaChi.Duong', 'ward.ward_name', 'district.district_name', 'province.province_name'
+                                        //         , 'DichVu.tenDichVu')
+                                        // ->orderby('PhieuDichVu.GioBatDau')
+                                        // ->get();
+        if (!empty($startDate)) {
+            // Chuyển đổi định dạng ngày nếu cần thiết
+            $startDate = date('Y-m-d', strtotime($startDate));
+            $ChiTietNgayLam->where('NgayLam', '>=', $startDate);
+        }
+        if (!empty($endDate)) {
+            // Chuyển đổi định dạng ngày nếu cần thiết
+            $endDate = date('Y-m-d', strtotime($endDate));
+            $ChiTietNgayLam->where('NgayLam', '<=', $endDate);
+        }
+        $ChiTietNgayLam = $ChiTietNgayLam->select('PhieuDichVu.idPhieuDichVu', 'PhieuDichVu.SoGio', 'PhieuDichVu.GioBatDau'
+                                                    , 'PhieuDichVu.GhiChu', 'ChiTietNgayLam.TinhTrangDichVu'
+                                                    , 'ChiTietNgayLam.NgayLam', 'users.name', 'users.SDT'
+                                                    , 'DiaChi.Duong', 'ward.ward_name', 'district.district_name', 'province.province_name'
+                                                    , 'DichVu.tenDichVu')
+                                            ->orderby('PhieuDichVu.GioBatDau')
+                                            ->get();
         $transactionsByDayOfWeek = [];
 
         // Lặp qua từng mục trong mảng $ChiTietNgayLam
