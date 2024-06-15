@@ -149,7 +149,7 @@ class DatDichVuController extends Controller
 
         return response()->json([
             "status" => true,
-            "message" => "Tao thanh cong"
+            "message" => "Tạo phiếu dịch vụ thành công"
         ]);
     }
 

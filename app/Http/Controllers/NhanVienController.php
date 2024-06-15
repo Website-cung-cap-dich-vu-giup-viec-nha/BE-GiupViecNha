@@ -29,8 +29,8 @@ class NhanVienController extends Controller
             ->leftJoin('ChucVu', 'ChucVu.idChucVu', '=', 'NhanVien.idChucVu');
 
         $query->where('name', 'like', '%' . $searchData . '%')
-            ->orWhere('SDT', 'like', '%' . $searchData . '%')
-            ->orWhere('email', 'like', '%' . $searchData . '%');
+            ->orWhere('SDT', 'like', '%' . $searchData . '%');
+            // ->orWhere('email', 'like', '%' . $searchData . '%');
 
         $nhanVien = null;
 
@@ -38,7 +38,7 @@ class NhanVienController extends Controller
             $nhanVien = $query->select(
                 'NhanVien.idNhanVien',
                 'users.name',
-                'users.email',
+                // 'users.email',
                 'users.SDT',
                 'users.GioiTinh',
                 'users.NgaySinh',
@@ -49,7 +49,7 @@ class NhanVienController extends Controller
             $newRow = [
                 'idNhanVien' => "Mã nhân viên",
                 'name' => 'Họ và tên nhân viên',
-                'email' => 'Email',
+                // 'email' => 'Email',
                 'SDT' => 'Số điện thoại',
                 'GioiTinh' => 'Giới tính',
                 'NgaySinh' => 'Ngày sinh',
@@ -88,9 +88,9 @@ class NhanVienController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'email' => 'required|unique:users|email',
+            // 'email' => 'required|unique:users|email',
             'SDT' => 'required|phone_number|unique:users,SDT',
-            'password' => 'required|confirmed',
+            // 'password' => 'required|confirmed',
             'GioiTinh' => 'required|string',
             'idPhongBan' => 'required|exists:PhongBan,idPhongBan',
             'idChucVu' => 'required|exists:ChucVu,idChucVu',
@@ -98,14 +98,14 @@ class NhanVienController extends Controller
         ], [
             'name.required' => 'Tên bắt buộc',
             'name.string' => 'Tên phải là chuỗi ký tự',
-            'email.required' => 'Email bắt buộc',
-            'email.unique' => 'Email đã tồn tại',
-            'email.email' => 'Email không hợp lệ',
+            // 'email.required' => 'Email bắt buộc',
+            // 'email.unique' => 'Email đã tồn tại',
+            // 'email.email' => 'Email không hợp lệ',
             'SDT.required' => 'Số điện thoại bắt buộc',
             'SDT.phone_number' => 'Số điện thoại không hợp lệ',
             'SDT.unique' => 'Số điện thoại đã tồn tại',
-            'password.required' => 'Mật khẩu bắt buộc',
-            'password.confirmed' => 'Xác nhận mật khẩu không khớp',
+            // 'password.required' => 'Mật khẩu bắt buộc',
+            // 'password.confirmed' => 'Xác nhận mật khẩu không khớp',
             'GioiTinh.required' => 'Giới tính bắt buộc',
             'GioiTinh.string' => 'Giới tính phải là chuỗi ký tự',
             'idPhongBan.required' => 'Phòng ban bắt buộc',
@@ -114,9 +114,13 @@ class NhanVienController extends Controller
             'idChucVu.exists' => 'Chức vụ không tồn tại',
             'NgaySinh.required' => 'Ngày sinh bắt buộc',
         ]);
+        if(Carbon::parse($request->NgaySinh)->age < 18){
+            return response()->json(['message' => ['Nhân sự chưa đủ 18 tuổi. Vui lòng từ chối nhân sự này.']], 201);
+        }
         $userData = $request->except(["idChucVu", "idPhongBan", "password_confirmation"]);
         $userData["NgaySinh"] = Carbon::parse($request->NgaySinh)->toDateString();
         $userData["status"] = 1;
+        $userData["password"] = bcrypt($userData["SDT"]);
         $user = User::create($userData);
         $NhanVienData = $request->only(["idChucVu", "idPhongBan"]);
         $NhanVienData["idNguoiDung"] = $user->id;
@@ -149,11 +153,11 @@ class NhanVienController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('users', 'email')->ignore($request->idNguoiDung),
-            ],
+            // 'email' => [
+            //     'required',
+            //     'email',
+            //     Rule::unique('users', 'email')->ignore($request->idNguoiDung),
+            // ],
             'SDT' => [
                 'required',
                 'phone_number',
@@ -201,7 +205,7 @@ class NhanVienController extends Controller
         $newRow = [
             'idNhanVien' => "Mã nhân viên",
             'name' => 'Họ và tên nhân viên',
-            'email' => 'Email',
+            // 'email' => 'Email',
             'SDT' => 'Số điện thoại',
             'GioiTinh' => 'Giới tính',
             'tenChucVu' => 'Chức vụ'
@@ -226,7 +230,7 @@ class NhanVienController extends Controller
         $headers = [
             'idNhanVien' => "Mã nhân viên",
             'name' => 'Họ và tên nhân viên',
-            'email' => 'Email',
+            // 'email' => 'Email',
             'SDT' => 'Số điện thoại',
             'GioiTinh' => 'Giới tính',
             'tenChucVu' => 'Chức vụ'
@@ -251,7 +255,7 @@ class NhanVienController extends Controller
             $row = $data[$rowIndex];
             $userData = [
                 'name' => $row['name'],
-                'email' => $row['email'],
+                // 'email' => $row['email'],
                 'SDT' => $row['SDT'],
                 'GioiTinh' => $row['GioiTinh'],
             ];
@@ -259,8 +263,8 @@ class NhanVienController extends Controller
             // Kiểm tra và thêm dữ liệu cho bảng users
             $userValidator = Validator::make($userData, [
                 'name' => 'required|string',
-                'email' => 'unique:users|email',
-                'SDT' => 'required|string',
+                // 'email' => 'unique:users|email',
+                'SDT' => 'required|phone_number|unique:users,SDT',
                 'GioiTinh' => 'string',
             ]);
 
@@ -286,7 +290,7 @@ class NhanVienController extends Controller
 
             // Kiểm tra và thêm dữ liệu cho bảng NhanVien
             $nhanVienValidator = Validator::make($nhanVienData, [
-                'idNhanVien' => 'required|numeric',
+                'idNhanVien' => 'required|numeric|unique:NhanVien,idNhanVien',
                 'idChucVu' => 'required|exists:ChucVu,idChucVu',
             ]);
 
@@ -322,6 +326,7 @@ class NhanVienController extends Controller
 
         $NhanVien = NhanVien::leftJoin('users', 'users.id', '=', 'NhanVien.idNguoiDung')
             ->leftJoin('ChiTietNhanVienLamDichVu', 'ChiTietNhanVienLamDichVu.idNhanVien', '=', 'NhanVien.idNhanVien')
+            ->where('NhanVien.idChucVu', '=', 3)
             ->select('NhanVien.idNhanVien', 'users.name', 'users.SDT');
 
         if ($idChiTietNgayLam !== null && $idChiTietNgayLam !== '') {
