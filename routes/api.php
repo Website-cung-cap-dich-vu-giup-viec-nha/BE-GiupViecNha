@@ -16,6 +16,7 @@ use App\Http\Controllers\NhanVienController;
 use App\Http\Controllers\PhanQuyenController;
 use App\Http\Controllers\PhongBanController;
 use App\Http\Controllers\ProvinceController;
+use App\Http\Controllers\QuyenController;
 use App\Http\Controllers\ThanhToanController;
 use App\Http\Controllers\ThongKeController;
 use App\Http\Controllers\WardController;
@@ -43,6 +44,8 @@ Route::group([
 Route::group([
     "middleware" => ["auth:api"]
 ], function(){
+    Route::get('Quyen/getQuyenByIdNhanVien', [QuyenController::class, 'getQuyenByIdNhanVien']);
+    Route::get('Calendar/getCalendarByManager/{idNhanVien}/{startDate}/{endDate}', [CalendarController::class, 'getCalendarByManager']);
     Route::get('NhanVien/isStaff', [NhanVienController::class, 'isStaff']);
     Route::get('PhanQuyen/{idQuyen}/checkQuyen', [PhanQuyenController::class, 'checkQuyen']);
     Route::get('Calendar/getCalendar/{startDate}/{endDate}', [CalendarController::class, 'getCalendar']);

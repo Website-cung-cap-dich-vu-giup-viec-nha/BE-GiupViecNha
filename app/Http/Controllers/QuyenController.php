@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NhanVien;
 use App\Models\Quyen;
 use Illuminate\Http\Request;
 
@@ -61,5 +62,20 @@ class QuyenController extends Controller
     public function destroy(Quyen $quyen)
     {
         //
+    }
+    public function getQuyenByIdNhanVien()
+    {
+        $userData = request()->user();
+        $staffData = NhanVien::where('idNguoiDung', $userData->id)->first();
+        $Quyen = Quyen::join('PhanQuyen', 'PhanQuyen.idQuyen', '=', 'Quyen.idQuyen')
+                        ->join('Nhom', 'Nhom.idNhom', '=', 'PhanQuyen.idNhom')
+                        ->join('NhomNguoiDung', 'NhomNguoiDung.idNhom', '=', 'Nhom.idNhom')
+                        ->where('NhomNguoiDung.idNhanVien', '=', $staffData->idNhanVien)
+                        ->select('Quyen.*')
+                        ->get();
+
+        return response()->json([
+            'data' => $Quyen,
+        ]);
     }
 }
