@@ -30,7 +30,7 @@ class NhanVienController extends Controller
 
         $query->where('name', 'like', '%' . $searchData . '%')
             ->orWhere('SDT', 'like', '%' . $searchData . '%');
-            // ->orWhere('email', 'like', '%' . $searchData . '%');
+        // ->orWhere('email', 'like', '%' . $searchData . '%');
 
         $nhanVien = null;
 
@@ -114,7 +114,7 @@ class NhanVienController extends Controller
             'idChucVu.exists' => 'Chức vụ không tồn tại',
             'NgaySinh.required' => 'Ngày sinh bắt buộc',
         ]);
-        if(Carbon::parse($request->NgaySinh)->age < 18){
+        if (Carbon::parse($request->NgaySinh)->age < 18) {
             return response()->json(['message' => ['Nhân sự chưa đủ 18 tuổi. Vui lòng từ chối nhân sự này.']], 201);
         }
         $userData = $request->except(["idChucVu", "idPhongBan", "password_confirmation"]);
@@ -133,9 +133,19 @@ class NhanVienController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(NhanVien $nhanVien)
+    public function show($id)
     {
-        //
+        $result = NhanVien::select('nhanvien.SoSao', 'users.name', 'users.NgaySinh', 'users.GioiTinh', 'users.Anh', 'chucvu.tenChucVu')
+        ->leftJoin('users', 'nhanvien.idNguoiDung', '=', 'users.id')
+        ->leftJoin('chucvu', 'nhanvien.idChucVu', '=', 'chucvu.idChucVu')
+        ->where('nhanvien.idNhanVien', $id)
+        ->first();
+
+        if ($result) {
+            return response()->json($result);
+        } else {
+            return response()->json(['message' => 'NhanVien not found'], 404);
+        }
     }
 
     /**
@@ -348,9 +358,13 @@ class NhanVienController extends Controller
         $staffData = NhanVien::where('idNguoiDung', $user->id)->first();
         if ($staffData == null) {
             return response()->json(['data' => false], 201);
-        }
-        else {
+        } else {
             return response()->json(['data' => true], 200);
         }
+    }
+
+    public function layThongTinNhanVienTheoIdNV($id)
+    {
+
     }
 }

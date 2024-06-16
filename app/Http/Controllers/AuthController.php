@@ -79,7 +79,7 @@ class AuthController extends Controller
             "status" => true,
             "message" => "User logged in",
             "token" => $token,
-            "expires_in" => auth()->factory()->getTTL() * 3600
+            "expires_in" => auth()->factory()->getTTL() * 43200
         ]);
     }
 
@@ -126,7 +126,7 @@ class AuthController extends Controller
             "status" => true,
             "message" => "Refresh token",
             "token" => $token,
-            "expires_in" => auth()->factory()->getTTL() * 60
+            "expires_in" => auth()->factory()->getTTL() * 43200
         ]);
     }
 
