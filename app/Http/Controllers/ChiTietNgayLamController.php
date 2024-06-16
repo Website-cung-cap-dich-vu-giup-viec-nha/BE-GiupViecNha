@@ -84,4 +84,29 @@ class ChiTietNgayLamController extends Controller
             'data' => $ChiTietNgayLam,
         ]);
     }
+
+
+    public function layChiTietNgayLamCuaTatCaPhieuDichVuCuaKhachHangTheoTuan(Request $request){
+        $startDate = $request->query('startDate');
+        $endDate = $request->query('endDate');
+        $idKH = $request->query('idKH');
+        if (!$startDate || !$endDate || !$idKH) {
+            return response()->json(['error' => 'Thời gian bắt đầu, kết thúc, idKh không được trống'], 400);
+        }
+
+        $results = ChiTietNgayLam::select('dichvu.tenDichVu', 'phieudichvu.idPhieuDichVu', 'phieudichvu.GioBatDau', 'users.name','chitietngaylam.NgayLam', 'nhanvien.idNhanVien','chitietngaylam.TinhTrangDichVu')
+            ->leftJoin('chitietnhanvienlamdichvu', 'chitietngaylam.idChiTietNgayLam', '=', 'chitietnhanvienlamdichvu.idChiTietNgayLam')
+            ->leftJoin('nhanvien', 'nhanvien.idNhanVien', '=', 'chitietnhanvienlamdichvu.idNhanVien')
+            ->leftJoin('users', 'users.id', '=', 'nhanvien.idNguoiDung')
+            ->leftJoin('phieudichvu', 'chitietngaylam.idPhieuDichVu', '=', 'phieudichvu.idPhieuDichVu')
+            ->leftJoin('chitietdichvu', 'phieudichvu.idChiTietDichVu', '=', 'chitietdichvu.idChiTietDichVu')
+            ->leftJoin('dichvu', 'dichvu.idDichVu', '=', 'chitietdichvu.idDichVu')
+            ->where('phieudichvu.idKhachHang', $idKH)
+            ->where('phieudichvu.TinhTrang', 2)
+            ->whereBetween('chitietngaylam.NgayLam', [$startDate, $endDate])
+            ->orderBy('phieudichvu.GioBatDau', 'asc')
+            ->get();
+
+        return response()->json($results);
+    }
 }
