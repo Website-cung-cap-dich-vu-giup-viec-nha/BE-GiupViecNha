@@ -126,6 +126,7 @@ class NhanVienController extends Controller
         $NhanVienData["idNguoiDung"] = $user->id;
         $NgaySinh = Carbon::parse($request->NgaySinh)->toDateString();
         $userData['NgaySinh'] = $NgaySinh;
+        $NhanVienData["SoSao"]=5;
         NhanVien::create($NhanVienData);
         return response()->json(['message' => ['Thêm nhân viên thành công']], 200);
     }
