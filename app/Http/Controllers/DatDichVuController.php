@@ -174,10 +174,10 @@ class DatDichVuController extends Controller
      */
     public function show($id)
     {
-        // return $id;
-        return DatDichVu::select('phieudichvu.*', 'dichvu.tenDichVu', 'chitietdichvu.BuoiDangKyDichVu')
+        return DatDichVu::select('phieudichvu.*', 'dichvu.tenDichVu', 'chitietdichvu.BuoiDangKyDichVu', 'kieudichvu.tenKieuDichVu', 'chitietdichvu.tenChiTietDichVu')
             ->leftJoin('chitietdichvu', 'phieudichvu.idChiTietDichVu', '=', 'chitietdichvu.idChiTietDichVu')
             ->leftJoin('dichvu', 'chitietdichvu.idDichVu', '=', 'dichvu.idDichVu')
+            ->leftJoin('kieudichvu', 'chitietdichvu.idKieuDichVu', '=', 'kieudichvu.idKieuDichVu')
             ->where('phieudichvu.idPhieuDichVu', $id)
             ->get();
     }
