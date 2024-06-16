@@ -86,7 +86,8 @@ class ChiTietNgayLamController extends Controller
     }
 
 
-    public function layChiTietNgayLamCuaTatCaPhieuDichVuCuaKhachHangTheoTuan(Request $request){
+    public function layChiTietNgayLamCuaTatCaPhieuDichVuCuaKhachHangTheoTuan(Request $request)
+    {
         $startDate = $request->query('startDate');
         $endDate = $request->query('endDate');
         $idKH = $request->query('idKH');
@@ -94,7 +95,7 @@ class ChiTietNgayLamController extends Controller
             return response()->json(['error' => 'Thời gian bắt đầu, kết thúc, idKh không được trống'], 400);
         }
 
-        $results = ChiTietNgayLam::select('dichvu.tenDichVu', 'phieudichvu.idPhieuDichVu', 'phieudichvu.GioBatDau', 'users.name','chitietngaylam.NgayLam', 'nhanvien.idNhanVien','chitietngaylam.TinhTrangDichVu')
+        $results = ChiTietNgayLam::select('dichvu.tenDichVu', 'phieudichvu.idPhieuDichVu', 'phieudichvu.GioBatDau', 'users.name', 'chitietngaylam.NgayLam', 'nhanvien.idNhanVien', 'chitietngaylam.TinhTrangDichVu')
             ->leftJoin('chitietnhanvienlamdichvu', 'chitietngaylam.idChiTietNgayLam', '=', 'chitietnhanvienlamdichvu.idChiTietNgayLam')
             ->leftJoin('nhanvien', 'nhanvien.idNhanVien', '=', 'chitietnhanvienlamdichvu.idNhanVien')
             ->leftJoin('users', 'users.id', '=', 'nhanvien.idNguoiDung')
@@ -108,5 +109,23 @@ class ChiTietNgayLamController extends Controller
             ->get();
 
         return response()->json($results);
+    }
+
+    public function updateTinhTrangDichVu($idChiTietNgayLam, $TinhTrangDichVu)
+    {
+        $ChiTietNgayLam = ChiTietNgayLam::findOrFail($idChiTietNgayLam);
+        if($ChiTietNgayLam->TinhTrangDichVu === 2 && $ChiTietNgayLam->TinhTrangDichVu == $TinhTrangDichVu){
+            return response()->json(['message' => ['Dịch vụ đã được băt đầu.']], 201);
+        }
+        if($ChiTietNgayLam->TinhTrangDichVu === 3 && $ChiTietNgayLam->TinhTrangDichVu == $TinhTrangDichVu){
+            return response()->json(['message' => ['Dịch vụ đã kết thúc.']], 201);
+        }
+        $ChiTietNgayLam["TinhTrangDichVu"] = $TinhTrangDichVu;
+        $ChiTietNgayLam->update();
+        if ($TinhTrangDichVu === 2) {
+            return response()->json(['message' => ['Xác nhận bắt đầu thực hiện dịch vụ thành công.']], 200);
+        } else {
+            return response()->json(['message' => ['Xác nhận kết thúc thực hiện dịch vụ thành công.']], 200);
+        }
     }
 }
