@@ -32,7 +32,8 @@ class AuthController extends Controller
             "name" => $request->name,
             "SDT" => $request->SDT,
             // "email" => $request->email,
-            "password" => bcrypt($request->password)
+            "password" => bcrypt($request->password),
+            "status" => 1,
         ]);
 
         KhachHang::create([
