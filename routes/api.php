@@ -13,6 +13,8 @@ use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\KhachHangController;
 use App\Http\Controllers\KieuDichVuController;
 use App\Http\Controllers\NhanVienController;
+use App\Http\Controllers\NhomController;
+use App\Http\Controllers\NhomNguoiDungController;
 use App\Http\Controllers\PhanQuyenController;
 use App\Http\Controllers\PhongBanController;
 use App\Http\Controllers\ProvinceController;
@@ -45,6 +47,8 @@ Route::group([
 Route::group([
     "middleware" => ["auth:api"]
 ], function(){
+    Route::get('Quyen/getPermissionIsNotAddNhom', [QuyenController::class, 'getPermissionIsNotAddNhom']);
+    Route::get('NhanVien/getStaffIsNotAddNhom', [NhanVienController::class, 'getStaffIsNotAddNhom']);
     Route::get('Quyen/getQuyenByIdNhanVien', [QuyenController::class, 'getQuyenByIdNhanVien']);
     Route::get('Calendar/getCalendarByManager/{idNhanVien}/{startDate}/{endDate}', [CalendarController::class, 'getCalendarByManager']);
     Route::get('NhanVien/isStaff', [NhanVienController::class, 'isStaff']);
@@ -58,6 +62,9 @@ Route::group([
     Route::get('ChucVu/getPositionByDepartment/{idPhongBan}', [ChucVuController::class, 'getPositionByDepartment']);
     Route::post('NhanVien/importData', [NhanVienController::class, 'importData']);
     Route::get('NhanVien/exportImportHeaderData', [NhanVienController::class, 'exportImportHeaderData']);
+    Route::apiResource('PhanQuyen', PhanQuyenController::class);
+    Route::apiResource('NhomNguoiDung', NhomNguoiDungController::class);
+    Route::apiResource('Nhom', NhomController::class);
     Route::apiResource('ChiTietNhanVienLamDichVu', ChiTietDatDichVuController::class);
     Route::apiResource('PhieuDichVu', DatDichVuController::class);
     Route::apiResource('DichVu', DichVuController::class);

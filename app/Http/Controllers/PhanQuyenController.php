@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\NhanVien;
 use App\Models\PhanQuyen;
+use App\Models\Quyen;
 use Illuminate\Http\Request;
 
 class PhanQuyenController extends Controller
@@ -11,9 +12,18 @@ class PhanQuyenController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $idNhom = $request->query('idNhom');
+
+        $Quyen = Quyen::leftJoin('PhanQuyen', 'PhanQuyen.idQuyen', '=', 'Quyen.idQuyen')
+            ->where('PhanQuyen.idNhom', '=', $idNhom)
+            ->select('Quyen.*', 'PhanQuyen.idPhanQuyen', 'PhanQuyen.idNhom')
+            ->get();
+
+        return response()->json([
+            'data' => $Quyen,
+        ]);
     }
 
     /**
@@ -29,7 +39,14 @@ class PhanQuyenController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'idNhom' => 'required',
+            'idQuyen' => 'required',
+        ], [
+            'idNhom.required' => 'Vui lòng chọn nhóm cần thêm nhân viên.',
+            'idQuyen.required' => 'Vui lòng chọn quyền cần thêm vào nhóm.',
+        ]);
+        PhanQuyen::create($request->all());
     }
 
     /**
@@ -59,9 +76,10 @@ class PhanQuyenController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PhanQuyen $phanQuyen)
+    public function destroy($idPhanQuyen)
     {
-        //
+        $PhanQuyen = PhanQuyen::findOrFail($idPhanQuyen);
+        $PhanQuyen->delete();
     }
     public function checkQuyen($idQuyen)
     {
