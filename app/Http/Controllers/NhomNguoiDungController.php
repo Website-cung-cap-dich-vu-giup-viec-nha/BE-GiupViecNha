@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NhanVien;
 use App\Models\NhomNguoiDung;
 use Illuminate\Http\Request;
 
@@ -10,9 +11,19 @@ class NhomNguoiDungController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $idNhom = $request->query('idNhom');
+
+        $NhanVien = NhanVien::leftJoin('users', 'users.id', '=', 'NhanVien.idNguoiDung')
+            ->leftJoin('NhomNguoiDung', 'NhomNguoiDung.idNhanVien', '=', 'NhanVien.idNhanVien')
+            ->where('NhomNguoiDung.idNhom', '=', $idNhom)
+            ->select('NhanVien.*', 'users.*', 'NhomNguoiDung.idNhomNguoiDung', 'NhomNguoiDung.idNhom')
+            ->get();
+
+        return response()->json([
+            'data' => $NhanVien,
+        ]);
     }
 
     /**
@@ -28,7 +39,15 @@ class NhomNguoiDungController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'idNhom' => 'required',
+            'idNhanVien' => 'required',
+        ], [
+            'idNhom.required' => 'Vui lòng chọn nhóm cần thêm nhân viên.',
+            'idNhanVien.required' => 'Vui lòng chọn nhân viên cần thêm vào nhóm.',
+        ]);
+        NhomNguoiDung::create($request->all());
+        // return response()->json(['message' => ['Thêm nhân viên vào nhóm thành công']], 200);
     }
 
     /**
@@ -58,8 +77,9 @@ class NhomNguoiDungController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(NhomNguoiDung $nhomNguoiDung)
+    public function destroy($idNhomNguoiDung)
     {
-        //
+        $NhomNguoiDung = NhomNguoiDung::findOrFail($idNhomNguoiDung);
+        $NhomNguoiDung->delete();
     }
 }

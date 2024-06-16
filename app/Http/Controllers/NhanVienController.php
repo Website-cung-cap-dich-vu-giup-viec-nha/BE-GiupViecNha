@@ -34,6 +34,8 @@ class NhanVienController extends Controller
 
         $nhanVien = null;
 
+        $total = $query->count();
+
         if ($start == null || $take == null) {
             $nhanVien = $query->select(
                 'NhanVien.idNhanVien',
@@ -64,8 +66,6 @@ class NhanVienController extends Controller
                 ->take($take)
                 ->get();
         }
-
-        $total = $query->count();
 
         return response()->json([
             'total' => $total,
@@ -352,5 +352,26 @@ class NhanVienController extends Controller
         else {
             return response()->json(['data' => true], 200);
         }
+    }
+    public function getStaffIsNotAddNhom(Request $request)
+    {
+        $idNhom = $request->query('idNhom');
+
+        $NhanVien = NhanVien::leftJoin('users', 'users.id', '=', 'NhanVien.idNguoiDung')
+            ->leftJoin('NhomNguoiDung', 'NhomNguoiDung.idNhanVien', '=', 'NhanVien.idNhanVien')
+            ->select('NhanVien.idNhanVien', 'users.name', 'users.SDT');
+
+        if ($idNhom !== null && $idNhom !== '') {
+            $NhanVien->whereNotIn('NhanVien.idNhanVien', function ($query) use ($idNhom) {
+                $query->select('idNhanVien')
+                    ->from('NhomNguoiDung')
+                    ->where('idNhom', $idNhom);
+            });
+        }
+
+        $NhanVien = $NhanVien->groupBy('NhanVien.idNhanVien', 'users.name', 'users.SDT')->get();
+        return response()->json([
+            'data' => $NhanVien,
+        ]);
     }
 }

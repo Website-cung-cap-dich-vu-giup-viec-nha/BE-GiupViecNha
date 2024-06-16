@@ -78,4 +78,24 @@ class QuyenController extends Controller
             'data' => $Quyen,
         ]);
     }
+    public function getPermissionIsNotAddNhom(Request $request)
+    {
+        $idNhom = $request->query('idNhom');
+
+        $Quyen = Quyen::leftJoin('PhanQuyen', 'PhanQuyen.idQuyen', '=', 'Quyen.idQuyen')
+            ->select('Quyen.*');
+
+        if ($idNhom !== null && $idNhom !== '') {
+            $Quyen->whereNotIn('Quyen.idQuyen', function ($query) use ($idNhom) {
+                $query->select('idQuyen')
+                    ->from('PhanQuyen')
+                    ->where('idNhom', $idNhom);
+            });
+        }
+
+        $Quyen = $Quyen->groupBy('Quyen.idQuyen', 'Quyen.tenQuyen')->get();
+        return response()->json([
+            'data' => $Quyen,
+        ]);
+    }
 }
