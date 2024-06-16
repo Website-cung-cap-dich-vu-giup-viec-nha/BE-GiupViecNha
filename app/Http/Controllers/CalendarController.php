@@ -61,7 +61,7 @@ class CalendarController extends Controller
                                                     , 'PhieuDichVu.GhiChu', 'ChiTietNgayLam.TinhTrangDichVu'
                                                     , 'ChiTietNgayLam.NgayLam', 'users.name', 'users.SDT'
                                                     , 'DiaChi.Duong', 'ward.ward_name', 'district.district_name', 'province.province_name'
-                                                    , 'DichVu.tenDichVu')
+                                                    , 'DichVu.tenDichVu', 'ChiTietNgayLam.idChiTietNgayLam')
                                             ->orderby('PhieuDichVu.GioBatDau')
                                             ->get();
         $transactionsByDayOfWeek = [];

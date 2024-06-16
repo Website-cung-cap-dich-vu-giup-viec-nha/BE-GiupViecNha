@@ -47,6 +47,7 @@ Route::group([
 Route::group([
     "middleware" => ["auth:api"]
 ], function(){
+    Route::put('ChiTietNgayLam/updateTinhTrangDichVu/{idChiTietNgayLam}/{TinhTrangDichVu}', [ChiTietNgayLamController::class, 'updateTinhTrangDichVu']);
     Route::get('Quyen/getPermissionIsNotAddNhom', [QuyenController::class, 'getPermissionIsNotAddNhom']);
     Route::get('NhanVien/getStaffIsNotAddNhom', [NhanVienController::class, 'getStaffIsNotAddNhom']);
     Route::get('Quyen/getQuyenByIdNhanVien', [QuyenController::class, 'getQuyenByIdNhanVien']);
