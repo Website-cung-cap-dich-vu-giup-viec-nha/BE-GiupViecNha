@@ -62,4 +62,15 @@ class ThongBaoController extends Controller
     {
         //
     }
+
+    public function layThongBaoByIdND($id)
+    {
+        return ThongBao::select('thongbao.*')
+            ->join('phieudichvu', 'thongbao.idPhieuDichVu', '=', 'phieudichvu.idPhieuDichVu')
+            ->join('khachhang', 'phieudichvu.idKhachHang', '=', 'khachhang.idKhachHang')
+            ->join('users', 'khachhang.idNguoiDung', '=', 'users.id')
+            ->where('users.id', $id)
+            ->orderByDesc('thongbao.NgayTao')
+            ->get();
+    }
 }
