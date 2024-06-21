@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class DichVu extends Model
 {
     use HasFactory;
-    protected $table = "DichVu";
+    protected $table = "dichvu";
 }
