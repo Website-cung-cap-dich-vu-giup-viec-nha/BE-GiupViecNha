@@ -6,6 +6,7 @@ use App\Http\Controllers\ChiTietDatDichVuController;
 use App\Http\Controllers\ChiTietDichVuController;
 use App\Http\Controllers\ChiTietNgayLamController;
 use App\Http\Controllers\ChucVuController;
+use App\Http\Controllers\DanhGiaController;
 use App\Http\Controllers\DatDichVuController;
 use App\Http\Controllers\DiaChiController;
 use App\Http\Controllers\DichVuController;
@@ -33,12 +34,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::post("auth/register", [AuthController::class, "register"]);
 Route::post("auth/login", [AuthController::class, "login"]);
-Route::put('auth/doimatkhau', [AuthController::class,'doiMatKhau']);
+Route::put('auth/doimatkhau', [AuthController::class, 'doiMatKhau']);
 Route::post("user/{id}", [AuthController::class, "updateUser"]);
 Route::group([
     "prefix" => "auth",
     "middleware" => ["auth:api"]
-], function(){
+], function () {
     Route::get("profile", [AuthController::class, "profile"]);
     Route::get("refresh-token", [AuthController::class, "refreshToken"]);
     Route::get("logout", [AuthController::class, "logout"]);
@@ -46,7 +47,7 @@ Route::group([
 
 Route::group([
     "middleware" => ["auth:api"]
-], function(){
+], function () {
     Route::put('ChiTietNgayLam/updateTinhTrangDichVu/{idChiTietNgayLam}/{TinhTrangDichVu}', [ChiTietNgayLamController::class, 'updateTinhTrangDichVu']);
     Route::get('Quyen/getPermissionIsNotAddNhom', [QuyenController::class, 'getPermissionIsNotAddNhom']);
     Route::get('NhanVien/getStaffIsNotAddNhom', [NhanVienController::class, 'getStaffIsNotAddNhom']);
@@ -81,19 +82,21 @@ Route::resource('phieudichvu', DatDichVuController::class);
 Route::get('layIdKhachHang/{id}', [KhachHangController::class, "layIdKhachHang"]);
 Route::resource('diachi', DiaChiController::class);
 Route::resource('province', ProvinceController::class);
-Route::get('layDiaChiByIdNguoiDung/{id}', [DiaChiController::class,'layDiaChiByIdNguoiDung']);
-Route::get('layHuyenByProvinceId/{id}', [DistrictController::class,'layHuyenByProvinceId']);
-Route::get('layXaByDistrictId/{id}', [WardController::class,'layXaByDistrictId']);
-Route::get("layPhieuDichVuTheoIdKhachHang/{id}",[DatDichVuController::class,"layPhieuDichVuTheoIdKhachHang"]);
+Route::get('layDiaChiByIdNguoiDung/{id}', [DiaChiController::class, 'layDiaChiByIdNguoiDung']);
+Route::get('layHuyenByProvinceId/{id}', [DistrictController::class, 'layHuyenByProvinceId']);
+Route::get('layXaByDistrictId/{id}', [WardController::class, 'layXaByDistrictId']);
+Route::get("layPhieuDichVuTheoIdKhachHang/{id}", [DatDichVuController::class, "layPhieuDichVuTheoIdKhachHang"]);
 Route::resource('phieudichvu', DatDichVuController::class);
-Route::get('layKieuDVByIdDV/{id}', [KieuDichVuController::class,'layKieuDVByIdDV']);
+Route::get('layKieuDVByIdDV/{id}', [KieuDichVuController::class, 'layKieuDVByIdDV']);
 Route::get("layChiTietDVTheoIdKieuDV/{id}", [ChiTietDichVuController::class, "layChiTietDVTheoIdKieuDV"]);
 Route::resource('chitietngaylam', ChiTietNgayLamController::class);
-Route::get('layChiTietNLTheoIdPDV/{id}', [ChiTietNgayLamController::class,'layChiTietNgayLamByIdPhieuDichVu']);
+Route::get('layChiTietNLTheoIdPDV/{id}', [ChiTietNgayLamController::class, 'layChiTietNgayLamByIdPhieuDichVu']);
 
-Route::post('thanhtoanvnpay', [ThanhToanController::class,'thanhToanVnPay']);
-Route::get('xacnhanthanhtoan', [ThanhToanController::class,'xacNhanThanhToan']);
+Route::post('thanhtoanvnpay', [ThanhToanController::class, 'thanhToanVnPay']);
+Route::get('xacnhanthanhtoan', [ThanhToanController::class, 'xacNhanThanhToan']);
 Route::resource('thongke', ThongKeController::class);
 Route::get('dichvu/search/{search}', [DichVuController::class, 'search']);
 Route::get('layThongBaoByIdND/{id}', [ThongBaoController::class, 'layThongBaoByIdND']);
 Route::get('layChiTietNgayLamKH', [ChiTietNgayLamController::class, 'layChiTietNgayLamCuaTatCaPhieuDichVuCuaKhachHangTheoTuan']);
+Route::resource('danhgia', DanhGiaController::class);
+Route::get('layDanhGiaByIdCTNVLDV/{id}', [DanhGiaController::class, 'layDanhGiaByIdChiTietNhanVienLamDichVu']);

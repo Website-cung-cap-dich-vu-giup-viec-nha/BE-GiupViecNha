@@ -64,7 +64,7 @@ class ChiTietNgayLamController extends Controller
 
     public function layChiTietNgayLamByIdPhieuDichVu($id)
     {
-        return ChiTietNgayLam::select('chitietngaylam.*', 'nhanvien.idNhanVien', 'users.name', 'users.Anh')
+        return ChiTietNgayLam::select('chitietngaylam.*', 'nhanvien.idNhanVien', 'users.name', 'users.Anh', 'chitietnhanvienlamdichvu.idChiTietNhanVienLamDichVu')
             ->leftJoin('phieudichvu', 'phieudichvu.idPhieuDichVu', '=', 'chitietngaylam.idPhieuDichVu')
             ->leftJoin('chitietnhanvienlamdichvu', 'chitietngaylam.idChiTietNgayLam', '=', 'chitietnhanvienlamdichvu.idChiTietNgayLam')
             ->leftJoin('nhanvien', 'chitietnhanvienlamdichvu.idNhanVien', '=', 'nhanvien.idNhanVien')
@@ -114,10 +114,10 @@ class ChiTietNgayLamController extends Controller
     public function updateTinhTrangDichVu($idChiTietNgayLam, $TinhTrangDichVu)
     {
         $ChiTietNgayLam = ChiTietNgayLam::findOrFail($idChiTietNgayLam);
-        if($ChiTietNgayLam->TinhTrangDichVu === 2 && $ChiTietNgayLam->TinhTrangDichVu == $TinhTrangDichVu){
+        if ($ChiTietNgayLam->TinhTrangDichVu === 2 && $ChiTietNgayLam->TinhTrangDichVu == $TinhTrangDichVu) {
             return response()->json(['message' => ['Dịch vụ đã được băt đầu.']], 201);
         }
-        if($ChiTietNgayLam->TinhTrangDichVu === 3 && $ChiTietNgayLam->TinhTrangDichVu == $TinhTrangDichVu){
+        if ($ChiTietNgayLam->TinhTrangDichVu === 3 && $ChiTietNgayLam->TinhTrangDichVu == $TinhTrangDichVu) {
             return response()->json(['message' => ['Dịch vụ đã kết thúc.']], 201);
         }
         $ChiTietNgayLam["TinhTrangDichVu"] = $TinhTrangDichVu;
