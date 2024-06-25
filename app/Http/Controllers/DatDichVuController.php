@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChiTietDatDichVu;
 use App\Models\ChiTietNgayLam;
 use App\Models\DatDichVu;
 use App\Models\DichVu;
@@ -205,28 +206,40 @@ class DatDichVuController extends Controller
     public function destroy($id)
     {
         $PhieuDichVu = DatDichVu::findOrFail($id);
+        $userData = request()->user();
+        $staffData = NhanVien::where('idNguoiDung', $userData->id)->first();
+        if ($staffData) {
+            $DatDichVu = DatDichVu::findOrFail($PhieuDichVu->idPhieuDichVu);
+            $DatDichVu->idNhanVienQuanLyDichVu = $staffData->idNhanVien;
+            $DatDichVu->save();
+
+            $dichVus = DichVu::distinct()
+                ->select('dichvu.*')
+                ->join('chitietdichvu', 'chitietdichvu.idDichVu', '=', 'dichvu.idDichVu')
+                ->join('phieudichvu', 'phieudichvu.idChiTietDichVu', '=', 'chitietdichvu.idChiTietDichVu')
+                ->where('phieudichvu.idPhieuDichVu', $DatDichVu->idPhieuDichVu)
+                ->get();
+            $ngayBD = Carbon::createFromFormat('Y-m-d', $DatDichVu->NgayBatDau)->format('d/m/Y');
+
+
+            ThongBao::create([
+                "TieuDe" => "Phiếu dịch vụ của bạn đã bị hủy",
+                "NoiDung" => "Phiếu dịch vụ " . strtolower($dichVus[0]->tenDichVu) . " bắt đầu vào " . $ngayBD . " lúc " . substr($DatDichVu->GioBatDau, 0, 5) . " của bạn đã bị hủy vì không có nhân viên phù hợp. Rất xin lỗi vì sự bất tiện này nếu bạn vẫn có nhu cầu bạn có thể đặt lại.",
+                "idPhieuDichVu" => $DatDichVu->idPhieuDichVu
+            ]);
+        }
+
+        if ($PhieuDichVu->TinhTrang == 2) {
+            ChiTietDatDichVu::join('chitietngaylam', 'chitietnhanvienlamdichvu.idChiTietNgayLam', '=', 'chitietngaylam.idChiTietNgayLam')
+                ->join('phieudichvu', 'chitietngaylam.idPhieuDichVu', '=', 'phieudichvu.idPhieuDichVu')
+                ->where('phieudichvu.idPhieuDichVu', $id)
+                ->update(['chitietnhanvienlamdichvu.idNhanVien' => null]);
+        }
+
         $PhieuDichVu->TinhTrang = 3;
         $PhieuDichVu->save();
 
-        $userData = request()->user();
-        $staffData = NhanVien::where('idNguoiDung', $userData->id)->first();
-        $DatDichVu = DatDichVu::findOrFail($PhieuDichVu->idPhieuDichVu);
-        $DatDichVu->idNhanVienQuanLyDichVu = $staffData->idNhanVien;
-        $DatDichVu->save();
 
-        $dichVus = DichVu::distinct()
-            ->select('dichvu.*')
-            ->join('chitietdichvu', 'chitietdichvu.idDichVu', '=', 'dichvu.idDichVu')
-            ->join('phieudichvu', 'phieudichvu.idChiTietDichVu', '=', 'chitietdichvu.idChiTietDichVu')
-            ->where('phieudichvu.idPhieuDichVu', $DatDichVu->idPhieuDichVu)
-            ->get();
-        $ngayBD = Carbon::createFromFormat('Y-m-d', $DatDichVu->NgayBatDau)->format('d/m/Y');
-
-        ThongBao::create([
-            "TieuDe" => "Phiếu dịch vụ của bạn đã bị hủy",
-            "NoiDung" => "Phiếu dịch vụ " . strtolower($dichVus[0]->tenDichVu) . " bắt đầu vào " . $ngayBD . " lúc " . substr($DatDichVu->GioBatDau, 0, 5) . " của bạn đã bị hủy vì không có nhân viên phù hợp. Rất xin lỗi vì sự bất tiện này nếu bạn vẫn có nhu cầu bạn có thể đặt lại.",
-            "idPhieuDichVu" => $DatDichVu->idPhieuDichVu
-        ]);
 
         return response()->json(['message' => ['Hủy phiếu dịch vụ thành công']], 200);
     }
