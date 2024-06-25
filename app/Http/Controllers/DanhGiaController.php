@@ -29,6 +29,16 @@ class DanhGiaController extends Controller
     public function store(Request $request)
     {
         //
+        DanhGia::create([
+            "SoSao" => $request->SoSao,
+            "YKien" => $request->YKien,
+            "idChiTietNhanVienLamDichVu" => $request->idChiTietNhanVienLamDichVu
+        ]);
+
+        return response()->json([
+            "status" => true,
+            "message" => "Thêm đánh giá thành công"
+        ]);
     }
 
     /**
@@ -50,9 +60,18 @@ class DanhGiaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, DanhGia $danhGia)
+    public function update(Request $request, $id)
     {
         //
+        $danhGia = DanhGia::findOrFail($id);
+        $danhGia->SoSao = $request->SoSao;
+        $danhGia->YKien = $request->YKien;
+        $danhGia->save();
+
+        return response()->json([
+            "status" => true,
+            "message" => "Cập nhật thành công"
+        ]);
     }
 
     /**
@@ -61,5 +80,10 @@ class DanhGiaController extends Controller
     public function destroy(DanhGia $danhGia)
     {
         //
+    }
+
+    public function layDanhGiaByIdChiTietNhanVienLamDichVu($id)
+    {
+        return DanhGia::where("idChiTietNhanVienLamDichVu", $id)->get();
     }
 }
