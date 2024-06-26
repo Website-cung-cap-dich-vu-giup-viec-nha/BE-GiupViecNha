@@ -15,6 +15,7 @@ class ThongBao extends Model
         "TieuDe",
         "NoiDung",
         "NgayTao",
+        "DaDoc",
         "idPhieuDichVu"
     ];
     public $timestamps = false;

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('TieuDe')->nullable();
             $table->string('NoiDung')->nullable();
             $table->timestamp('NgayTao')->useCurrent();
+            $table->boolean('DaDoc')->default(false);
             $table->foreignId('idPhieuDichVu')->nullable()->references('idPhieuDichVu')->on('PhieuDichVu');
         });
     }
