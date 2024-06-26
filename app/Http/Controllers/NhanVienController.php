@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChiTietDichVu;
+use App\Models\ChiTietNgayLam;
 use App\Models\ChucVu;
+use App\Models\DatDichVu;
+use App\Models\DichVu;
 use App\Models\NhanVien;
 use App\Models\PhongBan;
 use App\Models\User;
@@ -126,7 +130,7 @@ class NhanVienController extends Controller
         $NhanVienData["idNguoiDung"] = $user->id;
         $NgaySinh = Carbon::parse($request->NgaySinh)->toDateString();
         $userData['NgaySinh'] = $NgaySinh;
-        $NhanVienData["SoSao"]=5;
+        $NhanVienData["SoSao"] = 5;
         NhanVien::create($NhanVienData);
         return response()->json(['message' => ['Thêm nhân viên thành công']], 200);
     }
@@ -137,10 +141,10 @@ class NhanVienController extends Controller
     public function show($id)
     {
         $result = NhanVien::select('nhanvien.SoSao', 'users.name', 'users.NgaySinh', 'users.GioiTinh', 'users.Anh', 'chucvu.tenChucVu')
-        ->leftJoin('users', 'nhanvien.idNguoiDung', '=', 'users.id')
-        ->leftJoin('chucvu', 'nhanvien.idChucVu', '=', 'chucvu.idChucVu')
-        ->where('nhanvien.idNhanVien', $id)
-        ->first();
+            ->leftJoin('users', 'nhanvien.idNguoiDung', '=', 'users.id')
+            ->leftJoin('chucvu', 'nhanvien.idChucVu', '=', 'chucvu.idChucVu')
+            ->where('nhanvien.idNhanVien', $id)
+            ->first();
 
         if ($result) {
             return response()->json($result);
@@ -335,10 +339,25 @@ class NhanVienController extends Controller
     {
         $idChiTietNgayLam = $request->query('idChiTietNgayLam');
 
-        $NhanVien = NhanVien::leftJoin('users', 'users.id', '=', 'NhanVien.idNguoiDung')
-            ->leftJoin('ChiTietNhanVienLamDichVu', 'ChiTietNhanVienLamDichVu.idNhanVien', '=', 'NhanVien.idNhanVien')
-            ->where('NhanVien.idChucVu', '=', 3)
-            ->select('NhanVien.idNhanVien', 'users.name', 'users.SDT');
+        if ($idChiTietNgayLam !== null && $idChiTietNgayLam !== '' && $idChiTietNgayLam !== "null") {
+
+            $ChiTietNgayLam = ChiTietNgayLam::findOrFail($idChiTietNgayLam);
+
+            $PhieuDichVu = DatDichVu::findOrFail($ChiTietNgayLam->idPhieuDichVu);
+
+            $ChiTietDichVu = ChiTietDichVu::findOrFail($PhieuDichVu->idChiTietDichVu);
+
+            $DichVu = DichVu::findOrFail($ChiTietDichVu->idDichVu);
+        }
+
+        $NhanVien = NhanVien::leftJoin('users', 'users.id', '=', 'NhanVien.idNguoiDung');
+        $NhanVien = $NhanVien->leftJoin('ChiTietNhanVienLamDichVu', 'ChiTietNhanVienLamDichVu.idNhanVien', '=', 'NhanVien.idNhanVien');
+
+        if ($idChiTietNgayLam !== null && $idChiTietNgayLam !== '' && $idChiTietNgayLam !== "null") {
+            $NhanVien = $NhanVien->leftJoin('nanglucnhanvien', 'nanglucnhanvien.idNhanVien', '=', 'NhanVien.idNhanVien')
+                                    ->where('nanglucnhanvien.idDichVu', '=', $DichVu->idDichVu);
+        }
+        $NhanVien = $NhanVien->where('NhanVien.idChucVu', '=', 3)->select('NhanVien.idNhanVien', 'users.name', 'users.SDT', 'NhanVien.soSao');
 
         if ($idChiTietNgayLam !== null && $idChiTietNgayLam !== '') {
             $NhanVien->whereNotIn('NhanVien.idNhanVien', function ($query) use ($idChiTietNgayLam) {
@@ -348,7 +367,7 @@ class NhanVienController extends Controller
             });
         }
 
-        $NhanVien = $NhanVien->groupBy('NhanVien.idNhanVien', 'users.name', 'users.SDT')->get();
+        $NhanVien = $NhanVien->groupBy('NhanVien.idNhanVien', 'users.name', 'users.SDT', 'NhanVien.soSao')->get();
         return response()->json([
             'data' => $NhanVien,
         ]);
@@ -387,6 +406,5 @@ class NhanVienController extends Controller
 
     public function layThongTinNhanVienTheoIdNV($id)
     {
-
     }
 }

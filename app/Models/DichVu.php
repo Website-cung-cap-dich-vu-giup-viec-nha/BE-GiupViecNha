@@ -9,4 +9,5 @@ class DichVu extends Model
 {
     use HasFactory;
     protected $table = "dichvu";
+    protected $primaryKey = 'idDichVu';
 }
