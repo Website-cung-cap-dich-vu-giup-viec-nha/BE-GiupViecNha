@@ -50,9 +50,17 @@ class ThongBaoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ThongBao $thongBao)
+    public function update($id)
     {
         //
+        $thongbao = ThongBao::findOrFail($id);
+        $thongbao->DaDoc = 1;
+        $thongbao->save();
+
+        return response()->json([
+            "status" => true,
+            "message" => "Cập nhật thành công"
+        ]);
     }
 
     /**
@@ -72,5 +80,14 @@ class ThongBaoController extends Controller
             ->where('users.id', $id)
             ->orderByDesc('thongbao.NgayTao')
             ->get();
+    }
+
+    public function laySoLgThongBaoByIdND($id){
+        return ThongBao::join('phieudichvu', 'thongbao.idPhieuDichVu', '=', 'phieudichvu.idPhieuDichVu')
+        ->join('khachhang', 'phieudichvu.idKhachHang', '=', 'khachhang.idKhachHang')
+        ->join('users', 'khachhang.idNguoiDung', '=', 'users.id')
+        ->where('users.id', $id)
+        ->where('thongbao.DaDoc', 0)
+        ->count();
     }
 }
