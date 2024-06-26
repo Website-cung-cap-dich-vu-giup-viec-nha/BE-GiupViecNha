@@ -76,4 +76,24 @@ class DichVuController extends Controller
         }
         return $query->get();
     }
+    public function getProductIsNotAddStaffCapacityByStaffId(Request $request)
+    {
+        $idnhanvien = $request->query('idNhanVien');
+
+        $dichvu = DichVu::leftJoin('nanglucnhanvien', 'nanglucnhanvien.idnhanvien', '=', 'dichvu.iddichvu')
+            ->select('dichvu.idDichVu', 'dichvu.tenDichVu');
+
+        if ($idnhanvien !== null && $idnhanvien !== '') {
+            $dichvu->whereNotIn('dichvu.iddichvu', function ($query) use ($idnhanvien) {
+                $query->select('iddichvu')
+                    ->from('nanglucnhanvien')
+                    ->where('idnhanvien', $idnhanvien);
+            });
+        }
+
+        $dichvu = $dichvu->groupBy('dichvu.idDichVu', 'dichvu.tenDichVu')->get();
+        return response()->json([
+            'data' => $dichvu,
+        ]);
+    }
 }

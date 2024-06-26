@@ -13,6 +13,7 @@ use App\Http\Controllers\DichVuController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\KhachHangController;
 use App\Http\Controllers\KieuDichVuController;
+use App\Http\Controllers\NanglucnhanvienController;
 use App\Http\Controllers\NhanVienController;
 use App\Http\Controllers\NhomController;
 use App\Http\Controllers\NhomNguoiDungController;
@@ -48,6 +49,7 @@ Route::group([
 Route::group([
     "middleware" => ["auth:api"]
 ], function () {
+    Route::get('dichvu/getProductIsNotAddStaffCapacityByStaffId', [DichVuController::class, 'getProductIsNotAddStaffCapacityByStaffId']);
     Route::put('ChiTietNgayLam/updateTinhTrangDichVu/{idChiTietNgayLam}/{TinhTrangDichVu}', [ChiTietNgayLamController::class, 'updateTinhTrangDichVu']);
     Route::get('Quyen/getPermissionIsNotAddNhom', [QuyenController::class, 'getPermissionIsNotAddNhom']);
     Route::get('NhanVien/getStaffIsNotAddNhom', [NhanVienController::class, 'getStaffIsNotAddNhom']);
@@ -64,6 +66,7 @@ Route::group([
     Route::get('ChucVu/getPositionByDepartment/{idPhongBan}', [ChucVuController::class, 'getPositionByDepartment']);
     Route::post('NhanVien/importData', [NhanVienController::class, 'importData']);
     Route::get('NhanVien/exportImportHeaderData', [NhanVienController::class, 'exportImportHeaderData']);
+    Route::apiResource('nanglucnhanvien', NanglucnhanvienController::class);
     Route::apiResource('PhanQuyen', PhanQuyenController::class);
     Route::apiResource('NhomNguoiDung', NhomNguoiDungController::class);
     Route::apiResource('Nhom', NhomController::class);
