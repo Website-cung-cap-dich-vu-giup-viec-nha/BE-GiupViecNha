@@ -78,7 +78,7 @@ Route::group([
     Route::apiResource('ChucVu', ChucVuController::class);
     Route::apiResource('PhongBan', PhongBanController::class);
 });
-
+Route::get("layDanhGiaTheoSapXep/{kieuSapXep}", [DanhGiaController::class, "layDanhGiaTheoSapXep"]);
 Route::get("layChiTietDVTheoIdDV/{id}", [ChiTietDichVuController::class, "layChiTietDVTheoIdDV"]);
 Route::resource('dichvu', DichVuController::class);
 Route::resource('phieudichvu', DatDichVuController::class);
