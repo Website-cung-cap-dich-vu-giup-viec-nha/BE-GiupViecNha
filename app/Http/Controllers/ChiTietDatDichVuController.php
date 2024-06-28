@@ -63,9 +63,19 @@ class ChiTietDatDichVuController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ChiTietDatDichVu $chiTietDatDichVu)
+    public function show($id)
     {
-        //
+        $results = ChiTietDatDichVu::leftJoin('nhanvien', 'chitietnhanvienlamdichvu.idNhanVien', '=', 'nhanvien.idNhanVien')
+            ->leftJoin('users', 'users.id', '=', 'nhanvien.idNguoiDung')
+            ->leftJoin('chitietngaylam', 'chitietnhanvienlamdichvu.idChiTietNgayLam', '=', 'chitietngaylam.idChiTietNgayLam')
+            ->leftJoin('phieudichvu', 'phieudichvu.idPhieuDichVu', '=', 'chitietngaylam.idPhieuDichVu')
+            ->leftJoin('chitietdichvu', 'phieudichvu.idChiTietDichVu', '=', 'chitietdichvu.idChiTietDichVu')
+            ->leftJoin('dichvu', 'dichvu.idDichVu', '=', 'chitietdichvu.idDichVu')
+            ->select('users.name', 'chitietngaylam.NgayLam', 'phieudichvu.GioBatDau', 'dichvu.tenDichVu', 'phieudichvu.idPhieuDichVu')
+            ->where('chitietnhanvienlamdichvu.idChiTietNhanVienLamDichVu', $id)
+            ->get();
+
+        return response()->json($results);
     }
 
     /**

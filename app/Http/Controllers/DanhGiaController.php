@@ -12,7 +12,17 @@ class DanhGiaController extends Controller
      */
     public function index()
     {
-        //
+        $results = DanhGia::leftJoin('chitietnhanvienlamdichvu', 'danhgia.idChiTietNhanVienLamDichVu', '=', 'chitietnhanvienlamdichvu.idChiTietNhanVienLamDichVu')
+            ->leftJoin('nhanvien', 'chitietnhanvienlamdichvu.idNhanVien', '=', 'nhanvien.idNhanVien')
+            ->leftJoin('chitietngaylam', 'chitietnhanvienlamdichvu.idChiTietNgayLam', '=', 'chitietngaylam.idChiTietNgayLam')
+            ->leftJoin('phieudichvu', 'phieudichvu.idPhieuDichVu', '=', 'chitietngaylam.idPhieuDichVu')
+            ->leftJoin('khachhang', 'khachhang.idKhachHang', '=', 'phieudichvu.idKhachHang')
+            ->leftJoin('users', 'khachhang.idNguoiDung', '=', 'users.id')
+            ->select('users.Anh', 'users.name', 'danhgia.*')
+            ->orderBy('danhgia.idDanhGia', 'desc')
+            ->get();
+
+        return response()->json($results);
     }
 
     /**
@@ -85,5 +95,20 @@ class DanhGiaController extends Controller
     public function layDanhGiaByIdChiTietNhanVienLamDichVu($id)
     {
         return DanhGia::where("idChiTietNhanVienLamDichVu", $id)->get();
+    }
+
+    public function layDanhGiaTheoSapXep($kieuSapXep){
+
+        $results = DanhGia::leftJoin('chitietnhanvienlamdichvu', 'danhgia.idChiTietNhanVienLamDichVu', '=', 'chitietnhanvienlamdichvu.idChiTietNhanVienLamDichVu')
+            ->leftJoin('nhanvien', 'chitietnhanvienlamdichvu.idNhanVien', '=', 'nhanvien.idNhanVien')
+            ->leftJoin('chitietngaylam', 'chitietnhanvienlamdichvu.idChiTietNgayLam', '=', 'chitietngaylam.idChiTietNgayLam')
+            ->leftJoin('phieudichvu', 'phieudichvu.idPhieuDichVu', '=', 'chitietngaylam.idPhieuDichVu')
+            ->leftJoin('khachhang', 'khachhang.idKhachHang', '=', 'phieudichvu.idKhachHang')
+            ->leftJoin('users', 'khachhang.idNguoiDung', '=', 'users.id')
+            ->select('users.Anh', 'users.name', 'danhgia.*')
+            ->orderBy('danhgia.SoSao', $kieuSapXep)
+            ->get();
+
+        return response()->json($results);
     }
 }
