@@ -49,6 +49,7 @@ Route::group([
 Route::group([
     "middleware" => ["auth:api"]
 ], function () {
+    Route::get('Calendar/getCalendarByManager_v2', [CalendarController::class, 'getCalendarByManager_v2']);
     Route::get('dichvu/getProductIsNotAddStaffCapacityByStaffId', [DichVuController::class, 'getProductIsNotAddStaffCapacityByStaffId']);
     Route::put('ChiTietNgayLam/updateTinhTrangDichVu/{idChiTietNgayLam}/{TinhTrangDichVu}', [ChiTietNgayLamController::class, 'updateTinhTrangDichVu']);
     Route::get('Quyen/getPermissionIsNotAddNhom', [QuyenController::class, 'getPermissionIsNotAddNhom']);

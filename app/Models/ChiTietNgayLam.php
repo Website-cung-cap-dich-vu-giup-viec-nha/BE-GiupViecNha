@@ -18,4 +18,8 @@ class ChiTietNgayLam extends Model
         "TinhTrangDichVu"
     ];
     public $timestamps = false;
+    public function chiTietNhanVienLamDichVu()
+    {
+        return $this->hasMany(ChiTietDatDichVu::class, 'idChiTietNgayLam', 'idChiTietNgayLam');
+    }
 }
