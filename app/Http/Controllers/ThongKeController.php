@@ -21,4 +21,25 @@ class ThongKeController extends Controller
             ->groupBy('dv.tenDichVu')
             ->get();
     }
+
+    public function thongKeSoGioLam(Request $request)
+    {
+        $query = DB::table('nhanvien')
+            ->leftJoin('users', 'nhanvien.idNguoiDung', '=', 'users.id')
+            ->leftJoin('chitietnhanvienlamdichvu', 'chitietnhanvienlamdichvu.idNhanVien', '=', 'nhanvien.idNhanVien')
+            ->leftJoin('chitietngaylam', 'chitietngaylam.idChiTietNgayLam', '=', 'chitietnhanvienlamdichvu.idChiTietNgayLam')
+            ->leftJoin('phieudichvu', 'phieudichvu.idPhieuDichVu', '=', 'chitietngaylam.idPhieuDichVu')
+            ->select('nhanvien.idNhanVien', 'users.name', DB::raw('SUM(phieudichvu.SoGio) as SoGio'))
+            ->whereBetween('chitietngaylam.NgayLam', [$request->NgayBD, $request->NgayKT])
+            ->groupBy('nhanvien.idNhanVien', 'users.name')
+            ->havingRaw('SUM(phieudichvu.SoGio) IS NOT NULL');
+
+        if ($request->has('idNhanVien')) {
+            $query->where('nhanvien.idNhanVien', $request->idNhanVien);
+        }
+
+        $result = $query->get();
+
+        return $result;
+    }
 }

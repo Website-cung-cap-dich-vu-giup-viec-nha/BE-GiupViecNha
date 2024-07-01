@@ -106,3 +106,4 @@ Route::resource('danhgia', DanhGiaController::class);
 Route::get('layDanhGiaByIdCTNVLDV/{id}', [DanhGiaController::class, 'layDanhGiaByIdChiTietNhanVienLamDichVu']);
 Route::resource('thongbao', ThongBaoController::class);
 Route::get('laySoLgThongBaoByIdND/{id}', [ThongBaoController::class, 'laySoLgThongBaoByIdND']);
+route::get('thongKeSoGioLam', [ThongKeController::class, 'thongKeSoGioLam']);
